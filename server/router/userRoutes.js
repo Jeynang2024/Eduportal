@@ -18,29 +18,29 @@ router.post("/register/students", async (req, res) => {
         const studentsData = req.body; // Expecting an array of student objects
 
         if (!Array.isArray(studentsData)) {
-            return res.status(400).send("Invalid data format. Expected an array of student objects.");
+            return res.status(400).json({error :"Invalid data format. Expected an array of student objects."});
         }
 
-        const results = [];
+        //const results = [];
 
         for (const studentData of studentsData) {
             const { username, password, name, grade, DateOfBirth, parentsInformation, address, caste, religion, mothertoungue, literacyscore, behavioralScore, extracurricularActivities, bloodgroup, height, weight } = studentData;
 
             // Check if the user already exists based on the username
-            const existingUser = await usermodel.findOne({ username });
+            const existingUser = await User.findOne({ username });
             if (existingUser) {
-                results.push({ username, status: "failed", message: "User already exists with this username" });
+                //results.push({ username, status: "failed", message: "User already exists with this username" });
                 continue;
             }
 
             // Create a new user with role set to 'student'
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
+            //const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            const newUser = new usermodel({
+            const newUser = new User({
                 username,
                 password: hashedPassword,
-                Role: 'student'
+                role: 'student'
             });
 
             const savedUser = await newUser.save();
@@ -65,13 +65,13 @@ router.post("/register/students", async (req, res) => {
             });
 
             await newStudent.save();
-            results.push({ username, status: "success", message: "Student registered successfully" });
+            //results.push({ username, status: "success", message: "Student registered successfully" });
         }
-
-        res.status(201).send(results);
+        res.status(201);
+        //res.status(201).send(results);
     } catch (error) {
         console.error("Error during registration:", error);
-        res.status(500).send("Internal server error");
+        res.status(500).json({ error : "Internal server error"});
     }
 });
 
