@@ -4,6 +4,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 const api = axios.create({
   baseURL: backendUrl,
+  credentials: "include",
   withCredentials: true, // send cookies if needed
   headers: {
     "Content-Type": "application/json",

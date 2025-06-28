@@ -16,7 +16,7 @@ function NavbarGeneral() {
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About Us</Link></li>
-        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/auth/login">Login</Link></li>
         <li className="become">
   <Link to="/register-educator" className="educator-button">Become an Educator</Link>
 </li>

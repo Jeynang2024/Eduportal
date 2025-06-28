@@ -1,34 +1,31 @@
 import mongoose from "mongoose";
 
-
-
 const studentSchema = new mongoose.Schema({
-  name: String,required: true,
+  name: { type: String, required: true },
   student_id: { type: mongoose.Schema.Types.ObjectId },
-  grade: String,required: true,
-  DateOfBirth: Date,required: true,
-  parentsInformation
-: {
-    fatherName: String,
-    motherName: String,
-    contactNumber: String,
-    required: true
+  grade: { type: String, required: true },
+  DateOfBirth: { type: Date, required: true },
+  parentsInformation: {
+    fatherName: { type: String, required: true },
+    motherName: { type: String, required: true },
+    contactNumber: { type: String, required: true },
   },
   address: {
-    street: String,
-    city: String,
-    state: String,
-    zipCode: String,
-    required: true
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    zipCode: { type: String, required: true },
   },
-  caste: String,required: true,
-  religion: String,required: true,
-  mothertoungue: String,required: true,
-  literacyscore: Number,default: 0,required: true,
-  behavioralScore: Number,default: 0,
-  extracurricularActivities: [String],
-  bloodgroup: String,
-  height: Number,
-  weight: Number,}
-);
-module.exports = mongoose.model('Student', studentSchema);
+  caste: { type: String, required: true },
+  religion: { type: String, required: true },
+  mothertoungue: { type: String, required: true },
+  literacyscore: { type: Number, default: 0, required: true },
+  behavioralScore: { type: Number, default: 0 },
+  extracurricularActivities: [{ type: String }],
+  bloodgroup: { type: String },
+  height: { type: Number },
+  weight: { type: Number },
+});
+
+const Student = mongoose.model("Student", studentSchema);
+export default Student;

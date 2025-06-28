@@ -1,33 +1,41 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { registerEducator } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 const RegisterEducator = () => {
+    const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
+    email: "",
     location: "",
     qualification: "",
     contact: "",
     username: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
     setLoading(true);
-    await registerEducator(form);
+    const res = await registerEducator(form);
     setLoading(false);
-    toast.success("Request sent! Wait for approval.");
+    if (res.success) {
+      navigate("/auth/login");
+      toast.success("Registration successful!");
+    } else {
+      toast.error(res.error || "Registration failed");
+    }
     // Optionally reset form here
   };
 
@@ -94,7 +102,17 @@ const RegisterEducator = () => {
                 required
               />
             </div>
-            <div className="md:col-span-2">
+            <div className="">
+              <label className="block mb-1 font-medium">Email</label>
+              <input
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                className="border px-3 py-2 rounded w-full"
+                required
+              />
+            </div>
+            <div className="">
               <label className="block mb-1 font-medium">Qualification</label>
               <input
                 name="qualification"

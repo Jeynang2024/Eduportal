@@ -88,7 +88,7 @@ router.post('/register/educator', async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, password: hashedPassword, role });
-    const newEducator = new Educator({ email, location, qualification, contact });
+    const newEducator = new Educator({ name, email, location, qualification, contact });
 
     try {
        await newUser.save();
@@ -98,7 +98,7 @@ router.post('/register/educator', async (req, res) => {
         expiresIn: '1h'
         });
       res.cookie('accessToken', token, {
-        httpOnly: true,
+        // httpOnly: true,
         maxAge: 60 * 60 * 1000                         
         }).status(200).json({ message: 'Login successful' });
 
@@ -158,7 +158,7 @@ router.post('/login',async (req, res) => {
            expiresIn: '1h'
         });
             res.cookie('accessToken', token, {
-            httpOnly: true,
+            // httpOnly: true,
             maxAge: 60 * 60 * 1000                         
         }).status(200).json({ message: 'Login successful' });
         } /*else if(role=='student'){

@@ -1,24 +1,63 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { login } from "../services/authService";
+import { useUser } from "../context/UserContext";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { updateUserState } = useUser();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await login({ email, password });
+    const res = await login({ username, password });
     setLoading(false);
     if (res.success) {
+        console.log("Login response:", res);
       toast.success("Login successful!");
-      // You can redirect or set user context here
+      // Decode token from cookie (need to fetch it)
+      const token = getCookie("accessToken");
+    //   console.log("Token:", token);
+      if (token) {
+        const decoded = jwtDecode(token);
+        updateUserState({
+          userRole: decoded.role,
+          userId: decoded.id,
+        });
+        // Redirect based on role
+        if (decoded.role === "educator") {
+          navigate("/educator/dashboard");
+        } else if (decoded.role === "student") {
+          navigate("/student/dashboard");
+        } else {
+          navigate("/");
+        }
+      } else {
+        toast.error("Token not found");
+      }
     } else {
       toast.error("Invalid credentials");
     }
   };
+
+  // Helper to get cookie value
+  function getCookie(name) {
+    const cookie = Cookies.get(name);
+    // const cookies = document.cookie.split(";").map((c) => c.trim());
+    // for (const cookie of cookies) {
+    //   if (cookie.startsWith(name + "=")) {
+    //     return cookie.substring(name.length + 1);
+    //   }
+    // }
+    // return null;
+    return cookie
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50">
@@ -30,13 +69,13 @@ const Login = () => {
           Login
         </h2>
         <div>
-          <label className="block mb-1 font-medium">Email</label>
+          <label className="block mb-1 font-medium">Username</label>
           <input
-            type="email"
+            type="text"
             className="border px-3 py-2 rounded w-full"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>

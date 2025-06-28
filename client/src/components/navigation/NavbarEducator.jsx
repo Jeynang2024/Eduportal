@@ -9,6 +9,7 @@ const NavbarEducator = () => {
         <span className="text-white text-xl font-bold tracking-wide">EduPortal</span>
         <a href="/educator/dashboard" className="text-white hover:text-blue-200 transition-colors font-medium">Dashboard</a>
         <a href="/educator/add-data" className="text-white hover:text-blue-200 transition-colors font-medium">Add Data</a>
+        <a href="/educator/add-students" className="text-white hover:text-blue-200 transition-colors font-medium">Add Students</a>
       </div>
       <div className="relative">
         <button

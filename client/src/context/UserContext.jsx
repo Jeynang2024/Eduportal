@@ -3,11 +3,9 @@ import { createContext, useContext, useState } from "react";
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-
   const [userState, setUserState] = useState({
-    userRole: "USER",
-    tokenVerified: false,
-    isLoading: false,
+    userRole: null, // "educator", "student", or null
+    userId: null,
   });
 
   const updateUserState = (newState) => {
@@ -17,11 +15,19 @@ export const UserProvider = ({ children }) => {
     }));
   };
 
+  const clearUserState = () => {
+    setUserState({
+      userRole: null,
+      userId: null,
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
         ...userState,
         updateUserState,
+        clearUserState,
       }}
     >
       {children}

@@ -14,6 +14,7 @@ import AddData from "./pages/educator/AddData";
 import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProfile from "./pages/student/StudentProfile";
 import Scholarships from "./pages/student/Scholarships";
+import AddStudents from "./pages/educator/AddStudents";
 
 // Educator routes
 const educatorRoutes = {
@@ -23,6 +24,7 @@ const educatorRoutes = {
     { path: "dashboard", element: <EducatorDashboard /> },
     { path: "profile", element: <EducatorProfile /> },
     { path: "add-data", element: <AddData /> },
+    { path: "add-students", element: <AddStudents /> }, 
   ],
 };
 
