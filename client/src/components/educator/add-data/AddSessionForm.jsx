@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { addSession } from "../../../services/educatorService";
+import './AddSessionStyling.css';
 
 const AddSessionForm = () => {
   const handleSubmit = (e) => {
@@ -8,13 +9,29 @@ const AddSessionForm = () => {
     toast.success("Session added!");
   };
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block mb-1 font-medium">Session Name</label>
-        <input className="border px-3 py-2 rounded w-full" placeholder="Session Name" required />
-      </div>
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Session</button>
-    </form>
+    <div className="session-form">
+      <h2>Add New Session</h2>
+      <form>
+        <label>Title</label>
+        <input type="text" placeholder="Enter session title" />
+
+        <label>Description</label>
+        <textarea placeholder="Enter session description"></textarea>
+
+        <label>Date</label>
+        <input type="date" />
+
+        <label>Educator ID</label>
+        <select>
+          <option value="">Select ID</option>
+          <option value="EDU001">EDU001</option>
+          <option value="EDU002">EDU002</option>
+          <option value="EDU003">EDU003</option>
+        </select>
+
+        <button type="submit">Add Session</button>
+      </form>
+    </div>
   );
 };
 
