@@ -2,8 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import userRoutes from "./router/userRoutes.js"
+import dotenv from "dotenv"
+dotenv.config();
 const app = express();
-
 
 
 
@@ -16,7 +17,7 @@ app.use('/api/user',userRoutes);
 
 
 
-mongoose.connect('mongodb://localhost:27017/mydata')
+mongoose.connect(process.env.DB_URL)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
