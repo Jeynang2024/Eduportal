@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import { User,Educator,Session,AcademicData} from '../schema/userSchema.js';
-import  Student  from '../schema/studentSchema.js';
 import dotenv from "dotenv";
 import authenticateJWT from '../middleware/jwtToken.js';
 dotenv.config();
@@ -12,68 +11,6 @@ dotenv.config();
 const router=express.Router();
 
 const secret=process.env.JWT_SECRET || "your";
-
-router.post("/register/students", async (req, res) => {
-    try {
-        const studentsData = req.body; // Expecting an array of student objects
-
-        if (!Array.isArray(studentsData)) {
-            return res.status(400).json({error :"Invalid data format. Expected an array of student objects."});
-        }
-
-        //const results = [];
-
-        for (const studentData of studentsData) {
-            const { username, password, name, grade, DateOfBirth, parentsInformation, address, caste, religion, mothertoungue, literacyscore, behavioralScore, extracurricularActivities, bloodgroup, height, weight } = studentData;
-
-            // Check if the user already exists based on the username
-            const existingUser = await User.findOne({ username });
-            if (existingUser) {
-                //results.push({ username, status: "failed", message: "User already exists with this username" });
-                continue;
-            }
-
-            // Create a new user with role set to 'student'
-            //const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, 10);
-
-            const newUser = new User({
-                username,
-                password: hashedPassword,
-                role: 'student'
-            });
-
-            const savedUser = await newUser.save();
-
-            // Create a new student with the user ID reference
-            const newStudent = new Student({
-                name,
-                student_id: savedUser._id, // Reference to the created user
-                grade,
-                DateOfBirth,
-                parentsInformation,
-                address,
-                caste,
-                religion,
-                mothertoungue,
-                literacyscore,
-                behavioralScore,
-                extracurricularActivities,
-                bloodgroup,
-                height,
-                weight
-            });
-
-            await newStudent.save();
-            //results.push({ username, status: "success", message: "Student registered successfully" });
-        }
-        res.status(201);
-        //res.status(201).send(results);
-    } catch (error) {
-        console.error("Error during registration:", error);
-        res.status(500).json({ error : "Internal server error"});
-    }
-});
 
 
 router.post('/register/educator', async (req, res) => {
@@ -88,7 +25,7 @@ router.post('/register/educator', async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, password: hashedPassword, role });
-    const newEducator = new Educator({ name, email, location, qualification, contact });
+    const newEducator = new Educator({ email, location, qualification, contact });
 
     try {
        await newUser.save();
@@ -98,7 +35,7 @@ router.post('/register/educator', async (req, res) => {
         expiresIn: '1h'
         });
       res.cookie('accessToken', token, {
-        // httpOnly: true,
+        httpOnly: true,
         maxAge: 60 * 60 * 1000                         
         }).status(200).json({ message: 'Login successful' });
 
@@ -158,16 +95,16 @@ router.post('/login',async (req, res) => {
            expiresIn: '1h'
         });
             res.cookie('accessToken', token, {
-            // httpOnly: true,
+            httpOnly: true,
             maxAge: 60 * 60 * 1000                         
         }).status(200).json({ message: 'Login successful' });
-        } /*else if(role=='student'){
+        }else if(role=='student'){
              const student = await Student.findOne({ studentId: user._id.toString() });
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
             }
             res.status(200).json({ message: 'Login successful', user:student });
-        }*/
+        }
 
     } catch (error) {
         console.error('Error logging in:', error);
