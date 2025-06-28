@@ -1,0 +1,66 @@
+:root {
+  --deep-blue: #004d7a;
+  --dark-border: #002f4d;
+}
+
+/* Utility classes */
+.text-deep-blue { color: var(--deep-blue); }
+.border-dark { border-color: var(--dark-border); }
+.bg-deep-blue { background-color: var(--deep-blue); }
+.hover-bg-dark:hover { background-color: #00395a; }
+
+.session-form {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid var(--dark-border);
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.session-form h2 {
+  color: var(--deep-blue);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.session-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--deep-blue);
+}
+
+.session-form input,
+.session-form textarea,
+.session-form select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--dark-border);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.session-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.session-form button {
+  background-color: var(--deep-blue);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.session-form button:hover {
+  background-color: #00395a;
+}
