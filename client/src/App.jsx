@@ -47,18 +47,24 @@ const authRoutes = {
   ],
 };
 
+// Public routes (Landing and About Us)
+const publicRoutes = {
+  element: <RootLayout />,
+  children: [
+    { path: "/", element: <LandingPage /> },
+    { path: "/about", element: <AboutUs /> },
+  ],
+};
+
 // Root router configuration
 const router = createBrowserRouter([
+  publicRoutes,
+  authRoutes,
+  educatorRoutes,
+  studentRoutes,
   {
-    element: <RootLayout />,
-    children: [
-      { path: "/", element: <LandingPage /> },
-      { path: "/about", element: <AboutUs /> },
-      authRoutes,
-      educatorRoutes,
-      studentRoutes,
-      { path: "*", element: <NotFound /> },
-    ],
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

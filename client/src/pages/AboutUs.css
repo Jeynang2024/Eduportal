@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+
+.about-wrapper {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f5f7fb;
+  color: #333;
+}
+
+.about-section {
+  padding: 80px 10%;
+}
+
+.about-header h2 {
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #004d7a;
+}
+
+.tagline {
+  text-align: center;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  color: #008793;
+  margin-bottom: 50px;
+}
+
+.about-content-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  gap: 30px;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* This centers children horizontally */
+  text-align: center; /* Optional: centers text for visual alignment */
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.about-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.about-text {
+  max-width: 900px;
+}
+
+.about-text p {
+  font-size: 1rem;
+  line-height: 1.7;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.about-text h3 {
+  font-size: 2rem;
+  color: #004d7a;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.mission-list {
+  list-style-type: disc;
+  padding-left: 20px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.8;
+}
