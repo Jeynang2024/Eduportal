@@ -54,49 +54,52 @@ const educatorSchema = new mongoose.Schema(
   { timestamps: false }
 );
 
-const sessionSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    educatorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Educator",
-      required: true,
-    },
+const sessionSchema = new mongoose.Schema({
+ 
+  title: {
+    type: String,
+    required: true
   },
-  { timestamps: true }
-);
+  description: {
+    type: String,
+    required: true
+  },
+ educatorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Educator",
+        required: true
+    }
+}, { timestamps: true });
 
-const AcademicDataSchema = new mongoose.Schema(
-  {
-    studentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Student", //student collection reference
-      required: true,
-    },
-    subjects: {
+
+const AcademicDataSchema = new mongoose.Schema({
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Student",
+    required: true
+  },
+  username :{
+    type: String,
+    required:true,
+
+  },
+  subjects: [
+    {
       subjectName: {
         type: String,
-        required: true,
+        required: true
       },
       marks: {
         type: Number,
-        required: true,
-      },
-    },
-    totalmarks: {
-      type: Number,
-      required: true,
-    },
-  },
-  { timestamps: false }
-);
+        required: true
+      }
+    }
+  ]
+});
+
+
+
+  
 const User = mongoose.model("User", userSchema);
 const Educator = mongoose.model("Educator", educatorSchema);
 const Session = mongoose.model("Session", sessionSchema);
