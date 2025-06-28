@@ -2,10 +2,11 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import userRoutes from "./router/userRoutes.js"
+import dataRoutes from "./router/dataRoutes.js"
+
 import dotenv from "dotenv"
 dotenv.config();
 const app = express();
-
 
 
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/user',userRoutes);
-
+app.use('/api/data',dataRoutes);
 
 
 mongoose.connect(process.env.DB_URL)
