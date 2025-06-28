@@ -8,7 +8,17 @@ export const getEducatorProfile = () => {
   return { profile: 'mock data' };
 };
 
-export const addEducatorData = (data) => {
-  console.log('Adding Educator Data:', data);
-  return { success: true };
+export const addSession = (data) => {
+  console.log('Adding Session:', data);
+  return { success: true, type: 'session' };
+};
+
+export const addAcademicData = (data) => {
+  console.log('Adding Academic Data:', data);
+  return { success: true, type: 'academic' };
+};
+
+export const addBehaviouralData = (data) => {
+  console.log('Adding Behavioural Data:', data);
+  return { success: true, type: 'behavioural' };
 };
