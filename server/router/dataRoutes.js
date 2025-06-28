@@ -28,4 +28,4 @@ router.post("/academic/data",async (req,res)=>{
 
   }
 });
-
+export default router;
