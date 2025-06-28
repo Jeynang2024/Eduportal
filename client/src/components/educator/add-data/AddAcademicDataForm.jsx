@@ -32,7 +32,7 @@ const AddAcademicDataForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-white border border-[#002f4d] p-6 rounded shadow">
+    <div className="max-w-4xl mx-auto mt-10 bg-white border border-[#004d7a] p-6 rounded shadow">
       <h1 className="text-2xl font-bold mb-4 text-[#004d7a]">Upload CSV to Generate Table</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -43,7 +43,7 @@ const AddAcademicDataForm = () => {
           className="block w-full text-sm text-gray-500
             file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
             file:text-sm file:font-semibold file:bg-[#004d7a]
-            file:text-white hover:file:bg-[#00395a]"
+            file:text-white hover:file:bg-[#00a]"
         />
 
         {tableData.length > 0 && (
