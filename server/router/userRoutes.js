@@ -258,20 +258,20 @@ router.get("/educator/:id", async (req, res) => {
 });
 
 router.post("/session/data", authenticateJWT, async (req, res) => {
-  const educatorId = req.id;
-  console.log("secret", educatorId);
-  const { title, description } = req.body;
-  if (!title || !description) {
+  // Accept educatorId from body if provided, else use from JWT
+  const educatorId = req.body.educatorId || req.id;
+  const { title, description, date } = req.body;
+  if (!title || !description || !educatorId) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  const newSesion = new Session({ title, description, educatorId });
+  const newSession = new Session({ title, description, educatorId, date });
 
   try {
-    newSesion.save();
-    res.status(201).json({ message: "User created successfully", newSesion });
+    await newSession.save();
+    res.status(201).json({ message: "Session created successfully", session: newSession });
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error creating session:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

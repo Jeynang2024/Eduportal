@@ -1,33 +1,69 @@
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { addSession } from "../../../services/educatorService";
 import './AddSessionStyling.css';
 
 const AddSessionForm = () => {
-  const handleSubmit = (e) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [educatorId, setEducatorId] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addSession({ dummy: true });
-    toast.success("Session added!");
+    if (!title || !description || !date || !educatorId) {
+      toast.error("All fields are required");
+      return;
+    }
+    try {
+      const res = await addSession({ title, description, date, educatorId });
+      if (res.success) {
+        toast.success("Session added!");
+        setTitle("");
+        setDescription("");
+        setDate("");
+        setEducatorId("");
+      } else {
+        toast.error(res.error || "Failed to add session");
+      }
+    } catch (err) {
+      toast.error("Failed to add session");
+    }
   };
+
   return (
     <div className="session-form">
       <h2>Add New Session</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>Title</label>
-        <input type="text" placeholder="Enter session title" />
+        <input
+          type="text"
+          placeholder="Enter session title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
         <label>Description</label>
-        <textarea placeholder="Enter session description"></textarea>
+        <textarea
+          placeholder="Enter session description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
 
         <label>Date</label>
-        <input type="date" />
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
 
         <label>Educator ID</label>
-        <select>
-          <option value="">Select ID</option>
-          <option value="EDU001">EDU001</option>
-          <option value="EDU002">EDU002</option>
-          <option value="EDU003">EDU003</option>
-        </select>
+        <input
+          type="text"
+          placeholder="Enter Educator ID"
+          value={educatorId}
+          onChange={(e) => setEducatorId(e.target.value)}
+        />
 
         <button type="submit">Add Session</button>
       </form>

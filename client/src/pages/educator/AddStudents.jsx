@@ -80,7 +80,7 @@ const AddStudents = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-white border border-[#002f4d] p-6 rounded shadow">
+    <div className="max-w-4xl m-8 mx-auto mt-10 bg-white border border-[#002f4d] p-6 rounded shadow">
       <h1 className="text-2xl font-bold mb-4 text-[#004d7a]">
         Upload CSV to Generate Table
       </h1>

@@ -14,9 +14,14 @@ export const getEducatorProfile = async (userId) => {
   }
 };
 
-export const addSession = (data) => {
-  console.log('Adding Session:', data);
-  return { success: true, type: 'session' };
+export const addSession = async (data) => {
+  try {
+    const res = await api.post("/api/user/session/data", data);
+    return { success: true, ...res.data };
+  } catch (error) {
+    console.error("Error adding session:", error);
+    return { success: false, error: error.response?.data?.error || "Failed to add session" };
+  }
 };
 
 export const addAcademicData = (data) => {

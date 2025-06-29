@@ -47,20 +47,14 @@ const educatorSchema = new mongoose.Schema({
 }, { timestamps: false });
 
 const sessionSchema = new mongoose.Schema({
- 
-  title: {
-    type: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  educatorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Educator",
     required: true
   },
-  description: {
-    type: String,
-    required: true
-  },
- educatorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Educator",
-        required: true
-    }
+  date: { type: Date } // <-- Add this line
 }, { timestamps: true });
 
 
