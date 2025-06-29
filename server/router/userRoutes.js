@@ -12,6 +12,76 @@ const router = express.Router();
 
 const secret = process.env.JWT_SECRET || "your";
 
+
+
+router.get("/students", async (req,res)=>{
+const results = await Student.aggregate([
+  {
+    $addFields: {
+      totalScore: { $add: ["$literacyscore", "$behavioralScore"] }
+    }
+  },
+  {
+    $sort: { totalScore: -1 }
+  },
+  {
+    $group: {
+      _id: null,
+      students: { $push: "$$ROOT" }
+    }
+  },
+  {
+    $unwind: {
+      path: "$students",
+      includeArrayIndex: "students.rank"
+    }
+  },
+  {
+    $replaceRoot: { newRoot: "$students" }
+  },
+  {
+    $project: {
+      username: 1,
+      literacyscore: 1,
+      behavioralScore: 1,
+      totalScore: 1,
+      _id:0,
+      rank: { $add: ["$rank", 1] }  
+    }
+  }
+]);
+try {
+  if(!results){
+    res.status(500).json({ error: "no data" });
+   
+  }
+   res.json(results);
+
+  
+} catch (error) {
+  console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+}
+  
+});
+
+
+router.get("/session",async (req,res)=>{
+  const session =Session.find({});
+  try {
+    if(!session){
+          res.status(500).json({ error: "no data" });
+
+    }
+    res.status(201).json(session);
+
+  } catch (error) {
+console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+
 router.post("/register/students", async (req, res) => {
   try {
     const studentsData = req.body; // Expecting an array of student objects
@@ -258,20 +328,20 @@ router.get("/educator/:id", async (req, res) => {
 });
 
 router.post("/session/data", authenticateJWT, async (req, res) => {
-  // Accept educatorId from body if provided, else use from JWT
-  const educatorId = req.body.educatorId || req.id;
-  const { title, description, date } = req.body;
-  if (!title || !description || !educatorId) {
+  const educatorId = req.id;
+  console.log("secret", educatorId);
+  const { title, description } = req.body;
+  if (!title || !description) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  const newSession = new Session({ title, description, educatorId, date });
+  const newSesion = new Session({ title, description, educatorId });
 
   try {
-    await newSession.save();
-    res.status(201).json({ message: "Session created successfully", session: newSession });
+    newSesion.save();
+    res.status(201).json({ message: "User created successfully", newSesion });
   } catch (error) {
-    console.error("Error creating session:", error);
+    console.error("Error creating user:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
