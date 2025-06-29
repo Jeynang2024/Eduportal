@@ -12,75 +12,66 @@ const router = express.Router();
 
 const secret = process.env.JWT_SECRET || "your";
 
-
-
-router.get("/students", async (req,res)=>{
-const results = await Student.aggregate([
-  {
-    $addFields: {
-      totalScore: { $add: ["$literacyscore", "$behavioralScore"] }
+router.get("/students", async (req, res) => {
+  const results = await Student.aggregate([
+    {
+      $addFields: {
+        totalScore: { $add: ["$literacyscore", "$behavioralScore"] },
+      },
+    },
+    {
+      $sort: { totalScore: -1 },
+    },
+    {
+      $group: {
+        _id: null,
+        students: { $push: "$$ROOT" },
+      },
+    },
+    {
+      $unwind: {
+        path: "$students",
+        includeArrayIndex: "students.rank",
+      },
+    },
+    {
+      $replaceRoot: { newRoot: "$students" },
+    },
+    {
+      $project: {
+        name: 1,
+        literacyscore: 1,
+        behavioralScore: 1,
+        extracurricularActivities: 1,
+        totalScore: 1,
+        rank: { $add: ["$rank", 1] },
+        _id: 0,
+      },
+    },
+  ]);
+  try {
+    if (!results) {
+      res.status(500).json({ error: "no data" });
     }
-  },
-  {
-    $sort: { totalScore: -1 }
-  },
-  {
-    $group: {
-      _id: null,
-      students: { $push: "$$ROOT" }
-    }
-  },
-  {
-    $unwind: {
-      path: "$students",
-      includeArrayIndex: "students.rank"
-    }
-  },
-  {
-    $replaceRoot: { newRoot: "$students" }
-  },
-  {
-    $project: {
-      username: 1,
-      literacyscore: 1,
-      behavioralScore: 1,
-      totalScore: 1,
-      _id:0,
-      rank: { $add: ["$rank", 1] }  
-    }
-  }
-]);
-try {
-  if(!results){
-    res.status(500).json({ error: "no data" });
-   
-  }
-   res.json(results);
-
-  
-} catch (error) {
-  console.error(err);
+    res.json(results);
+  } catch (error) {
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
-}
-  
+  }
 });
 
-
-router.get("/session",async (req,res)=>{
-  const session =Session.find({});
+router.get("/session", async (req, res) => {
   try {
-    if(!session){
-          res.status(500).json({ error: "no data" });
-
+    const sessions = await Session.find({});
+    if (!sessions) {
+      return res.status(404).json({ error: "No sessions found" });
     }
-    res.status(201).json(session);
-
-  } catch (error) {
-console.error(err);
+    res.status(200).json(sessions);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
-})
-
+});
 
 router.post("/register/students", async (req, res) => {
   try {

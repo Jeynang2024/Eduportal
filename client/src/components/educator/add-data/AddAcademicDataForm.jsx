@@ -1,34 +1,52 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { addAcademicData } from "../../../services/educatorService";
+import Papa from "papaparse";
 
 const AddAcademicDataForm = () => {
   const [tableData, setTableData] = useState([]);
   const [fileName, setFileName] = useState("");
+  const [parsedRows, setParsedRows] = useState([]);
 
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setFileName(file.name);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target.result;
-      const rows = text.trim().split("\n");
-      const parsedData = rows.map((row) => row.split(","));
-      setTableData(parsedData);
-    };
-    reader.readAsText(file);
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        setParsedRows(results.data);
+        // For table preview
+        setTableData([Object.keys(results.data[0]), ...results.data.map(row => Object.values(row))]);
+      },
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!tableData.length) {
+    if (!parsedRows.length) {
       toast.error("Please upload a CSV file before submitting.");
       return;
     }
-    addAcademicData({ table: tableData, fileName });
-    toast.success("Academic data added!");
+    // Transform to backend schema
+    const payload = parsedRows.map(row => ({
+      username: row.username,
+      subjects: Object.keys(row)
+        .filter(key => key !== "username")
+        .map(subjectName => ({
+          subjectName,
+          marks: Number(row[subjectName])
+        }))
+    }));
+
+    try {
+      await addAcademicData(payload);
+      toast.success("Academic data added!");
+    } catch {
+      toast.error("Failed to add academic data.");
+    }
   };
 
   return (

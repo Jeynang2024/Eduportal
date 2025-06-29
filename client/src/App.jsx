@@ -15,6 +15,7 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import StudentProfile from "./pages/student/StudentProfile";
 import Scholarships from "./pages/student/Scholarships";
 import AddStudents from "./pages/educator/AddStudents";
+import Leaderboard from "./pages/Leaderboard";
 
 // Educator routes
 const educatorRoutes = {
@@ -24,7 +25,8 @@ const educatorRoutes = {
     { path: "dashboard", element: <EducatorDashboard /> },
     { path: "profile", element: <EducatorProfile /> },
     { path: "add-data", element: <AddData /> },
-    { path: "add-students", element: <AddStudents /> }, 
+    { path: "add-students", element: <AddStudents /> },
+    { path: "leaderboard", element: <Leaderboard /> }, 
   ],
 };
 
@@ -36,6 +38,7 @@ const studentRoutes = {
     { path: "dashboard", element: <StudentDashboard /> },
     { path: "profile", element: <StudentProfile /> },
     { path: "scholarships", element: <Scholarships /> },
+    { path: "leaderboard", element: <Leaderboard /> },
   ],
 };
 
@@ -55,6 +58,7 @@ const publicRoutes = {
   children: [
     { path: "/", element: <LandingPage /> },
     { path: "/about", element: <AboutUs /> },
+    { path: "/leaderboard", element: <Leaderboard /> },
   ],
 };
 

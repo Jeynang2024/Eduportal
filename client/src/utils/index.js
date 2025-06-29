@@ -18,3 +18,9 @@ export function getUserFromToken(token) {
     return null;
   }
 }
+
+// Add at the top of your dashboard file
+import { BookOpen, Calendar, Award, Star, Activity } from "lucide-react";
+
+const sessionIcons = [BookOpen, Calendar, Award, Star, Activity];
+export const getRandomIcon = () => sessionIcons[Math.floor(Math.random() * sessionIcons.length)];

@@ -1,11 +1,22 @@
-student_username,name,maths_total,maths_scored,physics_total,physics_scored,chemistry_total,chemistry_scored
-john_doe,John Doe,100,88,100,92,100,85
-jane_smith,Jane Smith,100,95,100,89,100,90
-alex_jones,Alex Jones,100,78,100,81,100,76
-emily_clark,Emily Clark,100,85,100,87,100,88
-michael_brown,Michael Brown,100,90,100,93,100,91
-sophia_wilson,Sophia Wilson,100,92,100,90,100,94
-liam_martin,Liam Martin,100,80,100,85,100,82
-olivia_lee,Olivia Lee,100,89,100,91,100,88
-noah_kim,Noah Kim,100,76,100,79,100,75
-ava_patel,Ava Patel,100,94,100,97,100,96
+username,maths,physics,chemistry
+abhishek.sharma,85,78,80
+gagan.patel,90,82,88
+monika.verma,75,69,72
+satvik.singh,88,84,86
+yash.reddy,92,91,89
+esha.kumar,79,74,77
+kiran.rao,83,81,85
+qadir.das,70,68,65
+wasim.iyer,87,86,88
+cyrus.khan,82,80,79
+isha.nair,95,93,94
+om.gupta,78,76,80
+suhani.desai,85,83,82
+yashaswi.jal,90,88,87
+eshwar.raut,80,78,79
+kaushik.sen,76,74,75
+qasim.chawla,84,82,83
+waheeda.yadav,72,70,71
+chetan.bhat,88,86,85
+isha.mehta,94,92,93
+ojas.pillai,81,79,80

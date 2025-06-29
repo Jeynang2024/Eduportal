@@ -1,2 +1,424 @@
-const EducatorDashboard = () => <div>Educator Dashboard (Dummy)</div>;
+import React, { useState } from 'react';
+import { Users, BookOpen, TrendingUp, Award, Calendar, MapPin, Star, Activity, Brain, Heart } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, AreaChart, Area } from 'recharts';
+
+const EducatorDashboard = () => {
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // Sample data based on schema
+  const sessionData = [
+    { title: "Mathematics Fundamentals", description: "Basic algebra and geometry", date: "2025-07-01", students: 24 },
+    { title: "Creative Writing Workshop", description: "Story telling techniques", date: "2025-07-03", students: 18 },
+    { title: "Science Exploration", description: "Physics experiments", date: "2025-07-05", students: 22 },
+    { title: "History Deep Dive", description: "Ancient civilizations", date: "2025-07-08", students: 20 }
+  ];
+
+  const studentPerformance = [
+    { month: 'Jan', literacy: 85, behavioral: 78, overall: 82 },
+    { month: 'Feb', literacy: 88, behavioral: 82, overall: 85 },
+    { month: 'Mar', literacy: 90, behavioral: 85, overall: 88 },
+    { month: 'Apr', literacy: 92, behavioral: 88, overall: 90 },
+    { month: 'May', literacy: 94, behavioral: 90, overall: 92 },
+    { month: 'Jun', literacy: 96, behavioral: 92, overall: 94 }
+  ];
+
+  const gradeDistribution = [
+    { grade: 'Grade 6', count: 45, color: '#8B5CF6' },
+    { grade: 'Grade 7', count: 38, color: '#06B6D4' },
+    { grade: 'Grade 8', count: 42, color: '#10B981' },
+    { grade: 'Grade 9', count: 35, color: '#F59E0B' },
+    { grade: 'Grade 10', count: 28, color: '#EF4444' }
+  ];
+
+  const subjectMastery = [
+    { subject: 'Math', mastery: 88, students: 45 },
+    { subject: 'Science', mastery: 92, students: 38 },
+    { subject: 'English', mastery: 85, students: 42 },
+    { subject: 'History', mastery: 78, students: 35 },
+    { subject: 'Geography', mastery: 82, students: 28 }
+  ];
+
+  const behaviorMetrics = [
+    { aspect: 'Discipline', value: 88 },
+    { aspect: 'Participation', value: 92 },
+    { aspect: 'Teamwork', value: 85 },
+    { aspect: 'Leadership', value: 78 },
+    { aspect: 'Creativity', value: 90 },
+    { aspect: 'Responsibility', value: 86 }
+  ];
+
+  const extracurricularData = [
+    { activity: 'Sports', count: 45 },
+    { activity: 'Music', count: 32 },
+    { activity: 'Art', count: 28 },
+    { activity: 'Drama', count: 20 },
+    { activity: 'Debate', count: 15 },
+    { activity: 'Coding', count: 25 }
+  ];
+
+  const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+      <div className="flex items-center justify-between">
+        <div className={`p-3 rounded-lg ${color}`}>
+          <Icon className="h-6 w-6 text-white" />
+        </div>
+        {trend && (
+          <div className="flex items-center text-green-600 text-sm font-medium">
+            <TrendingUp className="h-4 w-4 mr-1" />
+            +{trend}%
+          </div>
+        )}
+      </div>
+      <div className="mt-4">
+        <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+        <p className="text-sm text-gray-600 mt-1">{title}</p>
+        {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Educator Dashboard</h1>
+          <p className="text-gray-600">Empowering students through data-driven insights</p>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex space-x-1 mb-8 bg-white rounded-lg p-1 shadow-sm">
+          {['overview', 'sessions', 'students', 'analytics'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                activeTab === tab 
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'overview' && (
+          <div className="space-y-8">
+            {/* Key Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <StatCard
+                icon={Users}
+                title="Total Students"
+                value="21"
+                subtitle="Across 5 grades"
+                color="bg-gradient-to-r from-blue-500 to-blue-600"
+                trend="12"
+              />
+              <StatCard
+                icon={BookOpen}
+                title="Active Sessions"
+                value="4"
+                subtitle="This month"
+                color="bg-gradient-to-r from-green-500 to-green-600"
+                trend="8"
+              />
+              <StatCard
+                icon={Award}
+                title="Avg Performance"
+                value="89%"
+                subtitle="Overall score"
+                color="bg-gradient-to-r from-purple-500 to-purple-600"
+                trend="5"
+              />
+              <StatCard
+                icon={Activity}
+                title="Engagement Rate"
+                value="94%"
+                subtitle="Student participation"
+                color="bg-gradient-to-r from-orange-500 to-orange-600"
+                trend="3"
+              />
+            </div>
+
+            {/* Performance Trends */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
+                  Student Performance Trends
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={studentPerformance}>
+                    <defs>
+                      <linearGradient id="colorLiteracy" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.1}/>
+                      </linearGradient>
+                      <linearGradient id="colorBehavioral" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#06B6D4" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="literacy" stroke="#8B5CF6" fillOpacity={1} fill="url(#colorLiteracy)" />
+                    <Area type="monotone" dataKey="behavioral" stroke="#06B6D4" fillOpacity={1} fill="url(#colorBehavioral)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Users className="h-5 w-5 mr-2 text-green-600" />
+                  Grade Distribution
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={gradeDistribution}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={120}
+                      paddingAngle={5}
+                      dataKey="count"
+                    >
+                      {gradeDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {gradeDistribution.map((item, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className={`w-3 h-3 rounded-full mr-2`} style={{backgroundColor: item.color}}></div>
+                      <span className="text-sm text-gray-600">{item.grade}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Subject Mastery & Behavioral Analysis */}
+            <div className="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <BookOpen className="h-5 w-5 mr-2 text-purple-600" />
+                  Subject Mastery
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={subjectMastery} layout="horizontal">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="subject" type="category" />
+                    <Tooltip />
+                    <Bar dataKey="mastery" fill="#8B5CF6" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Heart className="h-5 w-5 mr-2 text-pink-600" />
+                  Behavioral Analysis
+                </h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <RadarChart data={behaviorMetrics}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="aspect" />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                    <Radar
+                      name="Score"
+                      dataKey="value"
+                      stroke="#EC4899"
+                      fill="#EC4899"
+                      fillOpacity={0.3}
+                    />
+                    <Tooltip />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'sessions' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sessionData.map((session, index) => (
+                <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <span className="text-sm text-gray-500">{session.students} students</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{session.title}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{session.description}</p>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    {new Date(session.date).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Extracurricular Participation</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={extracurricularData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="activity" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#10B981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'students' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Student Demographics</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600">65%</div>
+                  <div className="text-sm text-gray-600">Urban Background</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600">78%</div>
+                  <div className="text-sm text-gray-600">Above Average Literacy</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-purple-600">92%</div>
+                  <div className="text-sm text-gray-600">Active Participation</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Distribution</h3>
+                <div className="space-y-4">
+                  {[
+                    { age: '10-12 years', count: 45, percentage: 24 },
+                    { age: '13-14 years', count: 68, percentage: 36 },
+                    { age: '15-16 years', count: 52, percentage: 28 },
+                    { age: '17-18 years', count: 23, percentage: 12 }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className="w-24 text-sm text-gray-600">{item.age}</div>
+                      <div className="flex-1 mx-4">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${item.percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium text-gray-900">{item.count}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Regional Distribution</h3>
+                <div className="space-y-3">
+                  {[
+                    { region: 'Mumbai', count: 78, color: 'bg-blue-500' },
+                    { region: 'Pune', count: 45, color: 'bg-green-500' },
+                    { region: 'Nashik', count: 32, color: 'bg-purple-500' },
+                    { region: 'Nagpur', count: 28, color: 'bg-orange-500' },
+                    { region: 'Others', count: 5, color: 'bg-gray-500' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className={`w-3 h-3 rounded-full ${item.color} mr-3`}></div>
+                        <span className="text-sm text-gray-700">{item.region}</span>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Comprehensive Analytics</h3>
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={studentPerformance}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="literacy" stroke="#8B5CF6" strokeWidth={3} />
+                  <Line type="monotone" dataKey="behavioral" stroke="#06B6D4" strokeWidth={3} />
+                  <Line type="monotone" dataKey="overall" stroke="#10B981" strokeWidth={3} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Health Metrics</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Avg Height</span>
+                    <span className="font-semibold">152 cm</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Avg Weight</span>
+                    <span className="font-semibold">45 kg</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">BMI Range</span>
+                    <span className="font-semibold text-green-600">Normal</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Linguistic Diversity</h3>
+                <div className="space-y-3">
+                  {[
+                    { language: 'Marathi', percentage: 45 },
+                    { language: 'Hindi', percentage: 30 },
+                    { language: 'English', percentage: 15 },
+                    { language: 'Gujarati', percentage: 10 }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className="w-20 text-sm text-gray-600">{item.language}</div>
+                      <div className="flex-1 mx-3">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-indigo-600 h-2 rounded-full"
+                            style={{ width: `${item.percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium">{item.percentage}%</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default EducatorDashboard;

@@ -24,14 +24,25 @@ export const addSession = async (data) => {
   }
 };
 
-export const addAcademicData = (data) => {
-  console.log('Adding Academic Data:', data);
-  return { success: true, type: 'academic' };
+// UPDATED: Actually send data to backend API
+export const addAcademicData = async (data) => {
+  try {
+    const res = await api.post("/api/data/academic/data", data);
+    return { success: true, ...res.data };
+  } catch (error) {
+    console.error("Error adding academic data:", error);
+    return { success: false, error: error.response?.data?.error || "Failed to add academic data" };
+  }
 };
 
-export const addBehaviouralData = (data) => {
-  console.log('Adding Behavioural Data:', data);
-  return { success: true, type: 'behavioural' };
+export const addBehaviouralData = async (data) => {
+  try {
+    const res = await api.post("/api/data/behaviour/data", data);
+    return { success: true, ...res.data };
+  } catch (error) {
+    console.error("Error adding behavioural data:", error);
+    return { success: false, error: error.response?.data?.error || "Failed to add behavioural data" };
+  }
 };
 
 export const registerStudents = async (students) => {
