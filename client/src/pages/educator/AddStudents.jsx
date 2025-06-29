@@ -1,39 +1,89 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import './AddStudentStyle.css'
+import { registerStudents } from "../../services/educatorService";
+import Papa from "papaparse";
+import "./AddStudentStyle.css";
 
 const AddStudents = () => {
   const [tableData, setTableData] = useState([]);
   const [fileName, setFileName] = useState("");
+  const [parsedStudents, setParsedStudents] = useState([]);
 
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     setFileName(file.name);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target.result;
-      const rows = text.trim().split("\n");
-      const parsedData = rows.map((row) => row.split(","));
-      setTableData(parsedData);
-    };
-    reader.readAsText(file);
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        setTableData([
+          Object.keys(results.data[0]),
+          ...results.data.map((row) => Object.values(row)),
+        ]);
+        const students = results.data.map((obj, idx) => ({
+          name: obj.name,
+          grade: obj.grade,
+          DateOfBirth: obj.dob,
+          parentsInformation: {
+            fatherName: obj.fathername,
+            motherName: obj.mothersname,
+            contactNumber: "N/A",
+          },
+          address: {
+            street: obj["address.street"],
+            city: obj["address.city"],
+            state: obj["address.state"],
+            zipCode: obj["address.zipcode"],
+          },
+          caste: obj.caste,
+          religion: obj.relegion,
+          mothertoungue: obj.mothertongue,
+          literacyscore: 0,
+          behavioralScore: 0,
+          extracurricularActivities: obj["extracurricular activities"]
+            ? obj["extracurricular activities"].split(",").map((a) => a.trim())
+            : [],
+          bloodgroup: obj.bloodgroup,
+          height: obj.height ? Number(obj.height) : undefined,
+          weight: obj.weight ? Number(obj.weight) : undefined,
+          username: obj.username,
+          password: "student",
+        }));
+        setParsedStudents(students);
+      },
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!tableData.length) {
+    console.log("Submitting students:", parsedStudents);
+    if (!parsedStudents.length) {
       toast.error("Please upload a CSV file before submitting.");
       return;
     }
-    addAcademicData({ table: tableData, fileName });
-    toast.success("Academic data added!");
+    try {
+      const res = await registerStudents(parsedStudents);
+      if (!res.success) {
+        console.error("Registration failed:", res);
+        toast.error("Failed to register students.");
+        return;
+      }
+      toast.success("Students registered successfully!");
+      setTableData([]);
+      setParsedStudents([]);
+      setFileName("");
+    } catch (err) {
+      toast.error("Failed to register students.");
+    }
   };
 
   return (
     <div className="max-w-4xl mx-auto mt-10 bg-white border border-[#002f4d] p-6 rounded shadow">
-      <h1 className="text-2xl font-bold mb-4 text-[#004d7a]">Upload CSV to Generate Table</h1>
+      <h1 className="text-2xl font-bold mb-4 text-[#004d7a]">
+        Upload CSV to Generate Table
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <input
@@ -52,7 +102,10 @@ const AddStudents = () => {
               <thead className="bg-blue-100">
                 <tr>
                   {tableData[0].map((cell, idx) => (
-                    <th key={idx} className="border px-4 py-2 text-left font-semibold">
+                    <th
+                      key={idx}
+                      className="border px-4 py-2 text-left font-semibold"
+                    >
                       {cell}
                     </th>
                   ))}

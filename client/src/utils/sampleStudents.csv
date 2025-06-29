@@ -1,0 +1,11 @@
+username,name,grade,dob,fathername,mothersname,address.street,address.city,address.state,address.zipcode,caste,relegion,mothertongue,extracurricular activities,bloodgroup,height,weight
+amitsharma,Amit Sharma,5,2014-05-12,Rajesh Sharma,Sunita Sharma,123 Main St,Delhi,Delhi,110001,OBC,Hindu,Hindi,"Football,Art",B+,135,32
+priyasingh,Priya Singh,6,2013-08-23,Anil Singh,Meena Singh,45 Park Ave,Mumbai,Maharashtra,400001,General,Hindu,Marathi,"Dance,Music",O+,140,35
+rahulverma,Rahul Verma,4,2015-02-15,Suresh Verma,Anita Verma,78 Lake Rd,Bangalore,Karnataka,560001,SC,Hindu,Kannada,"Chess",A-,130,28
+snehapatel,Sneha Patel,7,2012-11-30,Manoj Patel,Rekha Patel,12 River St,Ahmedabad,Gujarat,380001,OBC,Hindu,Gujarati,"Drawing",B-,145,38
+arjundas,Arjun Das,5,2014-03-21,Prakash Das,Sunita Das,56 Hill Rd,Kolkata,West Bengal,700001,ST,Hindu,Bengali,"Cricket",AB+,133,30
+meeranair,Meera Nair,6,2013-07-18,Ramesh Nair,Leela Nair,89 Palm St,Chennai,Tamil Nadu,600001,General,Hindu,Tamil,"Music",A+,138,33
+vikramrao,Vikram Rao,4,2015-10-05,Satish Rao,Anjali Rao,23 Green Ln,Hyderabad,Telangana,500001,OBC,Hindu,Telugu,"Football",O-,129,27
+riyagupta,Riya Gupta,7,2012-04-25,Sanjay Gupta,Neha Gupta,67 Oak St,Pune,Maharashtra,411001,General,Jain,Marathi,"Dance",B+,146,36
+kabirkhan,Kabir Khan,5,2014-09-09,Imran Khan,Shabana Khan,34 Maple St,Lucknow,Uttar Pradesh,226001,OBC,Muslim,Urdu,"Basketball",A-,134,31
+ananyajoshi,Ananya Joshi,6,2013-12-12,Vinod Joshi,Seema Joshi,90 Cedar St,Jaipur,Rajasthan,302001,General,Hindu,Hindi,"Art,Music",AB-,139,34
