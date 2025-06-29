@@ -33,12 +33,6 @@ const StudentDashboard = () => {
         <p className="text-gray-600 mt-2">Progress Tracking</p>
       </div> */}
 
-      <div id="profile" className="hidden">
-        <StudentProfile />
-      </div>
-      <div id="scholorship" className="hidden">
-        <Scholarships />
-      </div>
     </div>
   );
 };
