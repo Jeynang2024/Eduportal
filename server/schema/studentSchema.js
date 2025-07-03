@@ -5,6 +5,11 @@ const studentSchema = new mongoose.Schema({
   student_id: { type: mongoose.Schema.Types.ObjectId },
   grade: { type: String, required: true },
   DateOfBirth: { type: Date, required: true },
+  educatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+       //student collection reference
+      required: true
+    },
   parentsInformation: {
     fatherName: { type: String, required: true },
     motherName: { type: String, required: true },

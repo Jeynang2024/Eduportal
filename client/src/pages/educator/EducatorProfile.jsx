@@ -14,7 +14,7 @@ const EducatorProfile = () => {
       getEducatorProfile(userId).then(setProfile);
     }
   }, [userId]);
-
+  console.log("Profile:",profile);
   if (!profile) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

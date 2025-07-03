@@ -14,6 +14,19 @@ export const getEducatorProfile = async (userId) => {
   }
 };
 
+export const getSessions= async ()=>{
+   try {
+    const res = await api.get("/api/user/session");
+    console.log(res);
+    return { success: true, ...res.data };
+  } catch (error) {
+    console.error("Error adding session:", error);
+    return { success: false, error: error.response?.data?.error || "Failed to add session" };
+  }
+}
+
+
+
 export const addSession = async (data) => {
   try {
     const res = await api.post("/api/user/session/data", data);
@@ -42,6 +55,16 @@ export const addBehaviouralData = async (data) => {
   } catch (error) {
     console.error("Error adding behavioural data:", error);
     return { success: false, error: error.response?.data?.error || "Failed to add behavioural data" };
+  }
+};
+
+export const getStudents = async () => {
+  try {
+    const res = await api.get("/api/user/student");
+    return res.data;
+  } catch (error) {
+    console.error("Error registering students:", error);
+    throw error;
   }
 };
 

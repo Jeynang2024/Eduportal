@@ -1,18 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Users, BookOpen, TrendingUp, Award, Calendar, MapPin, Star, Activity, Brain, Heart } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, AreaChart, Area } from 'recharts';
+import { getSessions, getStudents } from '../../services/educatorService';
+// Helper to compute age from DateOfBirth string
+const calcAge = dobString => {
+  const dob = new Date(dobString);
+  const diff = Date.now() - dob.getTime();
+  return new Date(diff).getUTCFullYear() - 1970;
+};
 
+const getAgeRange = age => {
+  if (age <= 12) return '10-12';
+  if (age <= 14) return '13-14';
+  if (age <= 16) return '15-16';
+  if (age <= 18) return '17-18';
+  return '18+';
+};
+
+const computeAgeRangeStats = students => {
+  const total = students.length;
+  const counts = { '10-12': 0, '13-14': 0, '15-16': 0, '17-18': 0, '18+': 0 };
+
+  for (const s of students) {
+    const age = calcAge(s.DateOfBirth);
+    const range = getAgeRange(age);
+    counts[range]++;
+  }
+
+  // Add percentages
+  const stats = Object.entries(counts).map(([range, count]) => ({
+    range,
+    count,
+    percentage: total > 0 ? (count / total) * 100 : 0
+  }));
+
+  return { total, stats };
+};
 const EducatorDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [sessionData, setSessionData] = useState([]);
+  const [students ,setStudents]= useState([]);
+const [ageStats, setAgeStats] = useState({ total: 0, stats: [] });
 
+   const [averages, setAverages] = useState({
+    avgLit: 0,
+    avgBeh: 0,
+    combined: 0,
+  });
   // Sample data based on schema
-  const sessionData = [
+  /*const sessionData = [
     { title: "Mathematics Fundamentals", description: "Basic algebra and geometry", date: "2025-07-01", students: 24 },
     { title: "Creative Writing Workshop", description: "Story telling techniques", date: "2025-07-03", students: 18 },
     { title: "Science Exploration", description: "Physics experiments", date: "2025-07-05", students: 22 },
     { title: "History Deep Dive", description: "Ancient civilizations", date: "2025-07-08", students: 20 }
-  ];
+  ];*/
+   useEffect(() => {
+      getSessions().then(data => {
+          console.log('🔄 getSessions returned:', data, Array.isArray(data))
 
+       const sessions = Object.keys(data)
+        .filter(key => !isNaN(key))
+        .map(key => data[key]);
+
+      setSessionData(sessions);
+    
+    });
+
+    getStudents().then(data => {
+          console.log('🔄 get students returned:', data, Array.isArray(data))
+           const Performance=Object.keys(data)
+        .filter(key => !isNaN(key))
+        .map(key => data[key]);
+  const count = Performance.length;
+  let totalLit = 0, totalBehav = 0;
+
+  Performance.forEach(s => {
+    totalLit += Number(s.literacyscore) || 0;
+    totalBehav += Number(s.behavioralScore) || 0;
+  });
+
+  const avgLit = count ? totalLit / count : 0;
+  const avgBeh = count ? totalBehav / count : 0;
+  const combined = avgLit + avgBeh;
+
+  console.log({ avgLit, avgBeh, combined });
+      setAverages({ avgLit, avgBeh, combined });
+
+   
+  // Finally, update the state
+  setStudents(Performance);
+const statsObj = computeAgeRangeStats(Performance);
+  setAgeStats(statsObj);
+console.log(statsObj);
+
+
+
+
+
+    });
+    
+  }, []);
   const studentPerformance = [
     { month: 'Jan', literacy: 85, behavioral: 78, overall: 82 },
     { month: 'Feb', literacy: 88, behavioral: 82, overall: 85 },
@@ -110,7 +197,7 @@ const EducatorDashboard = () => {
               <StatCard
                 icon={Users}
                 title="Total Students"
-                value="21"
+                value={students.length}
                 subtitle="Across 5 grades"
                 color="bg-gradient-to-r from-blue-500 to-blue-600"
                 trend="12"
@@ -118,8 +205,8 @@ const EducatorDashboard = () => {
               <StatCard
                 icon={BookOpen}
                 title="Active Sessions"
-                value="4"
-                subtitle="This month"
+                value={sessionData.length}
+                subtitle="Recent"
                 color="bg-gradient-to-r from-green-500 to-green-600"
                 trend="8"
               />
@@ -289,16 +376,16 @@ const EducatorDashboard = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Student Demographics</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">65%</div>
-                  <div className="text-sm text-gray-600">Urban Background</div>
+                  <div className="text-3xl font-bold text-blue-600">{averages.combined.toFixed(2)}</div>
+                  <div className="text-sm text-gray-600">Combined Average Score</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">78%</div>
-                  <div className="text-sm text-gray-600">Above Average Literacy</div>
+                  <div className="text-3xl font-bold text-green-600">{averages.avgLit.toFixed(2)}</div>
+                  <div className="text-sm text-gray-600">Average Literacy Score</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600">92%</div>
-                  <div className="text-sm text-gray-600">Active Participation</div>
+                  <div className="text-3xl font-bold text-purple-600">{averages.avgBeh.toFixed(2)}</div>
+                  <div className="text-sm text-gray-600">Average Behavioral Score</div>
                 </div>
               </div>
             </div>
@@ -307,14 +394,9 @@ const EducatorDashboard = () => {
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Age Distribution</h3>
                 <div className="space-y-4">
-                  {[
-                    { age: '10-12 years', count: 45, percentage: 24 },
-                    { age: '13-14 years', count: 68, percentage: 36 },
-                    { age: '15-16 years', count: 52, percentage: 28 },
-                    { age: '17-18 years', count: 23, percentage: 12 }
-                  ].map((item, index) => (
+                  {ageStats.stats.map((item, index) => (
                     <div key={index} className="flex items-center">
-                      <div className="w-24 text-sm text-gray-600">{item.age}</div>
+                      <div className="w-24 text-sm text-gray-600">{item.range}</div>
                       <div className="flex-1 mx-4">
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 

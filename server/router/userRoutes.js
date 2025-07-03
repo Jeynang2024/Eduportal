@@ -60,9 +60,13 @@ router.get("/students", async (req, res) => {
   }
 });
 
-router.get("/session", async (req, res) => {
+router.get("/session",authenticateJWT, async (req, res) => {
   try {
-    const sessions = await Session.find({});
+    console.log("req:",req)
+    const educatorId=req.id
+  console.log("educator:",educatorId);
+    const sessions = await Session.find({educatorId});
+    console.log("this",sessions);
     if (!sessions) {
       return res.status(404).json({ error: "No sessions found" });
     }
@@ -73,10 +77,12 @@ router.get("/session", async (req, res) => {
   }
 });
 
-router.post("/register/students", async (req, res) => {
+router.post("/register/students",authenticateJWT,async (req, res) => {
   try {
+    const educatorId=req.id;
+    console.log("educator from st:",educatorId);
     const studentsData = req.body; // Expecting an array of student objects
-
+    
     if (!Array.isArray(studentsData)) {
       return res.status(400).json({
         error: "Invalid data format. Expected an array of student objects.",
@@ -86,6 +92,7 @@ router.post("/register/students", async (req, res) => {
     //const results = [];
 
     for (const studentData of studentsData) {
+      console.log("entered");
       const {
         username,
         password,
@@ -123,6 +130,7 @@ router.post("/register/students", async (req, res) => {
       });
 
       const savedUser = await newUser.save();
+            console.log("user:",savedUser);
 
       // Create a new student with the user ID reference
       const newStudent = new Student({
@@ -130,6 +138,7 @@ router.post("/register/students", async (req, res) => {
         student_id: savedUser._id, // Reference to the created user
         grade,
         DateOfBirth,
+        educatorId,
         parentsInformation,
         address,
         caste,
@@ -142,8 +151,10 @@ router.post("/register/students", async (req, res) => {
         height,
         weight,
       });
+          console.log("notsaved:",newStudent);
 
       await newStudent.save();
+      console.log("saved:",newStudent);
       //results.push({ username, status: "success", message: "Student registered successfully" });
     }
     res
@@ -176,8 +187,9 @@ router.post("/register/educator", async (req, res) => {
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({ username, password: hashedPassword, role });
+  console.log(name)
   const newEducator = new Educator({
-    name,
+    name:name,
     email,
     location,
     qualification,
@@ -291,6 +303,22 @@ router.post("/login", async (req, res) => {
 });
 
 // Get student by user ID
+
+router.get("/student",authenticateJWT, async (req, res) => {
+  try {
+    const educatorId=req.id
+    const students = await Student.find({educatorId });
+    if (!students) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    res.status(200).json(students);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 router.get("/student/:id", async (req, res) => {
   try {
     const student = await Student.findOne({ student_id: req.params.id });
