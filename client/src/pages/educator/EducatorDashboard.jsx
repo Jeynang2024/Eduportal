@@ -3,6 +3,8 @@ import { Users, BookOpen, TrendingUp, Award, Calendar, MapPin, Star, Activity, B
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, AreaChart, Area } from 'recharts';
 import { getSessions, getStudents } from '../../services/educatorService';
 // Helper to compute age from DateOfBirth string
+const COLORS = ['#8B5CF6','#06B6D4','#10B981','#F59E0B','#EF4444'];
+
 const calcAge = dobString => {
   const dob = new Date(dobString);
   const diff = Date.now() - dob.getTime();
@@ -41,7 +43,8 @@ const EducatorDashboard = () => {
   const [sessionData, setSessionData] = useState([]);
   const [students ,setStudents]= useState([]);
 const [ageStats, setAgeStats] = useState({ total: 0, stats: [] });
-
+const [gradeDistribution, setGradeDistribution] = useState([]);
+const [extracurricularData,setExtracurricularData]=useState([])
    const [averages, setAverages] = useState({
     avgLit: 0,
     avgBeh: 0,
@@ -95,6 +98,47 @@ console.log(statsObj);
 
 
 
+//grade 
+const students = Object.values(data).filter(s => !isNaN(s.grade));
+
+  // Group and count
+  const countsByGrade = students.reduce((acc, s) => {
+    const grade = s.grade;
+    acc[grade] = (acc[grade] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Build array
+  const gradeDistribution = Object.entries(countsByGrade)
+    .map(([grade, count], idx) => ({
+      grade,
+      count,
+      color: COLORS[idx % COLORS.length] // assign colors cyclically
+    }));
+  
+  setGradeDistribution(gradeDistribution);
+
+
+//extracuriular activities
+
+ const students_of_activities = Object.values(data).filter(s => Array.isArray(s.extracurricularActivities));
+
+  // Count activities
+  const counts = students_of_activities.reduce((acc, s) => {
+    s.extracurricularActivities.forEach(act => {
+      acc[act] = (acc[act] || 0) + 1;
+    });
+    return acc;
+  }, {});
+
+  const extracurricularData = Object.entries(counts).map(([activity, count], i) => ({
+    activity,
+    count,
+    color: COLORS[i % COLORS.length]
+  }));
+
+  setExtracurricularData(extracurricularData);
+
 
 
     });
@@ -109,15 +153,15 @@ console.log(statsObj);
     { month: 'Jun', literacy: 96, behavioral: 92, overall: 94 }
   ];
 
-  const gradeDistribution = [
+ /* const gradeDistribution = [
     { grade: 'Grade 6', count: 45, color: '#8B5CF6' },
     { grade: 'Grade 7', count: 38, color: '#06B6D4' },
     { grade: 'Grade 8', count: 42, color: '#10B981' },
     { grade: 'Grade 9', count: 35, color: '#F59E0B' },
     { grade: 'Grade 10', count: 28, color: '#EF4444' }
-  ];
+  ];*/
 
-  const subjectMastery = [
+ const subjectMastery = [
     { subject: 'Math', mastery: 88, students: 45 },
     { subject: 'Science', mastery: 92, students: 38 },
     { subject: 'English', mastery: 85, students: 42 },
@@ -134,14 +178,14 @@ console.log(statsObj);
     { aspect: 'Responsibility', value: 86 }
   ];
 
-  const extracurricularData = [
+  /*const extracurricularData = [
     { activity: 'Sports', count: 45 },
     { activity: 'Music', count: 32 },
     { activity: 'Art', count: 28 },
     { activity: 'Drama', count: 20 },
     { activity: 'Debate', count: 15 },
     { activity: 'Coding', count: 25 }
-  ];
+  ];*/
 
   const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
@@ -213,7 +257,7 @@ console.log(statsObj);
               <StatCard
                 icon={Award}
                 title="Avg Performance"
-                value="89%"
+                value={(averages.combined/10).toFixed(2)}
                 subtitle="Overall score"
                 color="bg-gradient-to-r from-purple-500 to-purple-600"
                 trend="5"
@@ -358,9 +402,12 @@ console.log(statsObj);
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Extracurricular Participation</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={extracurricularData}>
+                <BarChart data={extracurricularData} margin={{ top: 10, right: 20, left: 20, bottom: 30 }} >
+
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="activity" />
+                  <XAxis dataKey="activity" 
+              interval={0}           // Show every label
+          tick={{ angle: -15, dy: 5 }}/>
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="count" fill="#10B981" radius={[4, 4, 0, 0]} />

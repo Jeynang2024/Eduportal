@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { getStudentData ,getStudentBehaviouralData} from "../../services/studentService";
+const COLORS =["#8B5CF6","#06B6D4","#10B981","#F59E0B","#EF4444"]
+const BEHAVIOR_COLORS = ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
+
 import {
   User,
   BookOpen,
@@ -44,12 +48,28 @@ const StudentDashboard = () => {
   const user = getUserFromToken(accessToken);
   const userId = user?.id;
   const [profile, setProfile] = useState(null);
-
+  const [AcademicData,setAcademicData]=useState([]);
+  const [BehavioralData,setBehaviouralData]=useState([]);
   useEffect(() => {
     if (userId) {
       getStudentProfile(userId).then(setProfile);
     }
+
+    getStudentData().then(data=>{
+      setAcademicData(data[0]);
+      console.log("student data",data[0])
+    })
+
+    getStudentBehaviouralData().then(data=>{
+      setBehaviouralData(data[0]);
+      console.log("student data",data[0])
+
+    })
+
+
+
   }, [userId]);
+  
 
   if (!profile) {
     return (
@@ -81,7 +101,7 @@ const StudentDashboard = () => {
     religion: profile.religion || "Hindu",
     mothertoungue: profile.mothertoungue || "Hindi",
     literacyscore: profile.literacyscore || 88,
-    behavioralScore: profile.behaviorScores || 85,
+    behavioralScore: profile.behavioralScore/10 || 85,
     extracurricularActivities: profile.extracurricularActivities || [
       "Football",
       "Music",
@@ -143,22 +163,42 @@ const StudentDashboard = () => {
     },
   ];
 
-  const currentMarks = [
+  /*const currentMarks = [
     { subject: "Mathematics", marks: 92, total: 100, color: "#8B5CF6" },
     { subject: "Science", marks: 96, total: 100, color: "#06B6D4" },
     { subject: "English", marks: 92, total: 100, color: "#10B981" },
     { subject: "History", marks: 88, total: 100, color: "#F59E0B" },
     { subject: "Geography", marks: 93, total: 100, color: "#EF4444" },
-  ];
+  ];*/
+  const currentMarks = AcademicData?.subjects?.map((sub,number) => ({
+  subject: sub.subjectName,
+  marks: sub.marks,
+  total: 100,
+  color: COLORS[number % COLORS.length]  // wrong
+})) || [];
 
-  const behaviorScores = [
+//BehavioralData
+const behaviorScores = BehavioralData?.criteria?.map((sub,number) => ({
+  criteria: sub.Name,
+  score: sub.score,
+   // wrong
+})) || [];
+const sortedBehavior = [...behaviorScores].sort((a, b) => b.score - a.score);
+const topBehaviors = sortedBehavior.slice(0, 3);
+
+const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
+  ...item,
+  color: BEHAVIOR_COLORS[idx % BEHAVIOR_COLORS.length],
+}));
+
+  /*const behaviorScores = [
     { criteria: "Discipline", score: 90 },
     { criteria: "Participation", score: 72 },
     { criteria: "Teamwork", score: 92 },
     { criteria: "Leadership", score: 64 },
     { criteria: "Creativity", score: 94 },
     { criteria: "Responsibility", score: 87 },
-  ];
+  ];*/
 
   const upcomingSessions = [
     {
@@ -408,7 +448,7 @@ const StudentDashboard = () => {
                     <div key={index} className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-700">
-                          {subject.subject}
+                          {subject.subjectName}
                         </span>
                         <span className="text-sm font-bold text-gray-900">
                           {subject.marks}/{subject.total}
@@ -647,7 +687,22 @@ const StudentDashboard = () => {
                   Behavior Highlights
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+               {topBehaviorsWithColors.map((item, idx) => (
+  <div
+    key={idx}
+    className="flex items-center justify-between p-3 rounded-lg"
+    style={{ backgroundColor: item.color + "22" }}  // subtle bg tint
+  >
+    <span className="font-medium" style={{ color: item.color }}>
+      {item.criteria}
+    </span>
+    <span className="font-bold" style={{ color: item.color }}>
+      {item.score}%
+    </span>
+  </div>
+))}
+
+                  {/*<div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                     <span className="text-green-700">Creativity</span>
                     <span className="font-bold text-green-800">94%</span>
                   </div>
@@ -658,7 +713,7 @@ const StudentDashboard = () => {
                   <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <span className="text-purple-700">Discipline</span>
                     <span className="font-bold text-purple-800">90%</span>
-                  </div>
+                  </div>*/}
                 </div>
               </div>
             </div>

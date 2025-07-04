@@ -15,6 +15,25 @@ export const getStudentProfile = async (userId) => {
   }
 };
 
+export const getStudentData=async ()=>{
+   try {
+    const res = await api.get(`/api/user/student/data`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching student profile:", error);
+    return null;
+  }
+}
+export const getStudentBehaviouralData=async ()=>{
+   try {
+    const res = await api.get(`/api/user/student/behavioural/data`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching student profile:", error);
+    return null;
+  }
+}
+
 
 export const getScholarships = () => {
   console.log('Fetching Scholarships');

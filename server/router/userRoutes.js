@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { User, Educator, Session, AcademicData } from "../schema/userSchema.js";
+import { User, Educator, Session, AcademicData,Behaviour } from "../schema/userSchema.js";
 import Student from "../schema/studentSchema.js";
 import dotenv from "dotenv";
 import authenticateJWT from "../middleware/jwtToken.js";
@@ -111,7 +111,6 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
         height,
         weight,
       } = studentData;
-
       // Check if the user already exists based on the username
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -121,6 +120,7 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
 
       // Create a new user with role set to 'student'
       //const salt = await bcrypt.genSalt(10);
+      console.log("pass",password);
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new User({
@@ -181,6 +181,7 @@ router.post("/register/educator", async (req, res) => {
   if (!name || !password || !email || !location || !qualification) {
     return res.status(400).json({ error: "All fields are required" });
   }
+  console.log("name from register educator",name);
   const existuser = await User.findOne({ email });
   if (existuser) {
     return res.status(400).json({ error: "User already exists" });
@@ -253,11 +254,13 @@ router.post("/login", async (req, res) => {
     console.log(user);
     if (!user) {
       return res.status(401).json({ error: " username doesnot exist" });
-    }
+    }    console.log("found");
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("entered")
       return res.status(401).json({ error: "Invalid password" });
-    }
+    }console.log("matched");
     const role = user.role;
     if (role == "educator") {
       const educator = await Educator.findOne({
@@ -317,6 +320,51 @@ router.get("/student",authenticateJWT, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.get("/student/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    console.log("student :",student)
+    const academic= await AcademicData.find({studentId:student[0]._id})
+if (!academic) {
+      return res.status(404).json({ error: "Academic data not found" });
+    }
+    console.log("academic",academic)
+    res.status(200).json(academic);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router.get("/student/behavioural/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    console.log("student :",student)
+    const academic= await Behaviour.find({studentId:student[0]._id})
+if (!academic) {
+      return res.status(404).json({ error: "Academic data not found" });
+    }
+    console.log("academic",academic)
+    res.status(200).json(academic);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
+
+
 
 
 router.get("/student/:id", async (req, res) => {

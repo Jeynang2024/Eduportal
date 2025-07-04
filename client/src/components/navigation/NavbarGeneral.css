@@ -61,3 +61,20 @@
   background-color: white;
   color: #004d7a;
 }
+/* Center dropdown and style the translate widget */
+#google_translate_element {
+  text-align: right;
+}
+
+.goog-te-gadget-simple {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Style the select/flag dropdown */
+.goog-te-combo {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem; /* matches Tailwind's rounded */
+  border: 1px solid #ccc;
+}

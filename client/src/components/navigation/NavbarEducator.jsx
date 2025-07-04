@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom'; // or useHistory for v5
 
 const NavbarEducator = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+const [cookies, , removeCookie] = useCookies(['authToken']);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove the authentication cookie
+    removeCookie('accessToken', { path: '/' });
+    // Redirect to homepage
+window.location.href = '/';
+  };
 
   useEffect(() => {
       // Inject Google Translate script only once
@@ -92,7 +103,10 @@ const NavbarEducator = () => {
             >
               Profile
             </a>
-            <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+            <button 
+              onClick={handleLogout}
+
+            className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
               Logout
             </button>
           </div>
