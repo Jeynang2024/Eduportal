@@ -1,22 +1,21 @@
-username,name,grade,dob,fathername,mothersname,address.street,address.city,address.state,address.zipcode,caste,religion,mothertongue,extracurricular activities,bloodgroup,height,weight,password
-abhishek.sharma,Abhishek Sharma,5,2014-05-12,Rajesh Sharma,Sunita Sharma,123 Main St,Delhi,Delhi,110001,OBC,Hindu,Hindi,"Football , Art",B+,135,32,1234
-gagan.patel,Gagan Patel,6,2013-09-23,Manish Patel,Rekha Patel,45 Laxmi Rd,Mumbai,Maharashtra,400001,General,Hindu,Marathi,"Cricket,Dance",A-,140,38,1234
-monika.verma,Monika Verma,4,2015-01-11,Ravi Verma,Anita Verma,78 Gandhi Ave,Kolkata,West Bengal,700001,OBC,Hindu,Bengali,"Drawing,Music",O+,130,30,1234
-satvik.singh,Satvik Singh,5,2014-12-05,Amit Singh,Pooja Singh,9 Church Ln,Bangalore,Karnataka,560001,SC,Hindu,Kannada,"Chess,Art",B-,132,33,1234
-yash.reddy,Yash Reddy,6,2013-06-17,Kiran Reddy,Sindhu Reddy,101 MG Rd,Hyderabad,Telangana,500001,General,Hindu,Telugu,"Football,Science Club",A+,138,36,1234
-esha.kumar,Esha Kumar,5,2014-02-20,Sunil Kumar,Geeta Kumar,23 Park St,Chennai,Tamil Nadu,600001,OBC,Hindu,Tamil,"Math Club,Badminton",B+,137,35,1234
-kiran.rao,Kiran Rao,4,2015-07-29,Ramesh Rao,Lakshmi Rao,50 Main Rd,Pune,Maharashtra,411001,SC,Hindu,Marathi,"Art,Drama",A,128,28,1234
-qadir.das,Qadir Das,5,2014-11-03,Subhash Das,Madhuri Das,76 MG Rd,Ahmedabad,Gujarat,380001,ST,Hindu,Gujarati,"Cricket,Music",B-,133,34,1234
-wasim.iyer,Wasim Iyer,6,2013-04-14,Krishna Iyer,Sudha Iyer,88 Temple Rd,Coimbatore,Tamil Nadu,641001,General,Hindu,Tamil,"Dance,Art",O-,139,37,1234
-cyrus.khan,Cyrus Khan,5,2014-08-30,Farooq Khan,Safiya Khan,12 Bazaar St,Lucknow,Uttar Pradesh,226001,General,Muslim,Urdu,"Poetry,Debate",A+,136,34,1234
-isha.nair,Isha Nair,4,2015-03-22,Ajay Nair,Leela Nair,56 River Rd,Thiruvananthapuram,Kerala,695001,General,Hindu,Malayalam,"Music,Art",B+,129,31,1234
-om.gupta,Om Gupta,6,2013-10-05,Sunil Gupta,Meena Gupta,90 Station Rd,Chandigarh,Chandigarh,160001,General,Hindu,Hindi,"Football,Science Club",A-,141,39,1234
-suhani.desai,Suhani Desai,5,2014-01-19,Bhupesh Desai,Kavita Desai,34 Hill St,Surat,Gujarat,395001,OBC,Hindu,Gujarati,"Drama,Art",B-,134,32,1234
-yashaswi.jal,Yashaswi Jal,6,2013-12-12,Raj Jal,Neha Jal,67 Garden Ln,Bhopal,Madhya Pradesh,462001,SC,Hindu,Hindi,"Music,Cricket",A,140,36,1234
-eshwar.raut,Eshwar Raut,5,2014-05-07,Nikhil Raut,Priya Raut,78 Lake Rd,Nashik,Maharashtra,422001,General,Hindu,Marathi,"Badminton,Art",O+,137,35,1234
-kaushik.sen,Kaushik Sen,4,2015-02-27,Anup Sen,Rina Sen,23 Gandhi St,Patna,Bihar,800001,OBC,Hindu,Bhojpuri,"Science Club,Dance",B+,130,29,1234
-qasim.chawla,Qasim Chawla,5,2014-09-14,Deepak Chawla,Anjali Chawla,56 College St,Amritsar,Punjab,143001,General,Sikh,Punjabi,"Cricket,Music",A-,133,33,1234
-waheeda.yadav,Waheeda Yadav,6,2013-07-08,Sunita Yadav,Ram Yadav,12 Temple St,Varanasi,Uttar Pradesh,221001,SC,Hindu,Hindi,"Drama,Art",B,135,34,1234
-chetan.bhat,Chetan Bhat,5,2014-10-21,Manoj Bhat,Soni Bhat,88 Market Rd,Shimla,Himachal Pradesh,171001,General,Hindu,Hindi,"Art,Debate",O-,132,31,1234
-isha.mehta,Isha Mehta,4,2015-03-12,Rajiv Mehta,Nisha Mehta,45 Lake Ave,Indore,Madhya Pradesh,452001,General,Jain,Marathi,"Chess,Drawing",A+,128,30,1234
-ojas.pillai,Ojas Pillai,6,2013-11-25,Ajith Pillai,Rekha Pillai,90 Sea St,Kochi,Kerala,682001,General,Hindu,Malayalam,"Football,Music",B+,139,37,1234
+username,name,grade,dob,fathername,mothersname,address.street,address.city,address.state,address.zipcode,caste,religion,mothertongue,extracurricular activities,bloodgroup,height,weight
+abhishek.sharma,Abhishek Sharma,5,2014-05-12,Rajesh Sharma,Sunita Sharma,123 Main St,Delhi,Delhi,110001,OBC,Hindu,Hindi,"Football , Art",B+,135,32
+gagan.patel,Gagan Patel,6,2013-09-23,Manish Patel,Rekha Patel,45 Laxmi Rd,Mumbai,Maharashtra,400001,General,Hindu,Marathi,"Cricket,Dance",A-,140,38
+monika.verma,Monika Verma,4,2015-01-11,Ravi Verma,Anita Verma,78 Gandhi Ave,Kolkata,West Bengal,700001,OBC,Hindu,Bengali,"Drawing,Music",O+,130,30
+satvik.singh,Satvik Singh,5,2014-12-05,Amit Singh,Pooja Singh,9 Church Ln,Bangalore,Karnataka,560001,SC,Hindu,Kannada,"Chess,Art",B-,132,33
+yash.reddy,Yash Reddy,6,2013-06-17,Kiran Reddy,Sindhu Reddy,101 MG Rd,Hyderabad,Telangana,500001,General,Hindu,Telugu,"Football,Science Club",A+,138,36
+esha.kumar,Esha Kumar,5,2014-02-20,Sunil Kumar,Geeta Kumar,23 Park St,Chennai,Tamil Nadu,600001,OBC,Hindu,Tamil,"Math Club,Badminton",B+,137,35
+kiran.rao,Kiran Rao,4,2015-07-29,Ramesh Rao,Lakshmi Rao,50 Main Rd,Pune,Maharashtra,411001,SC,Hindu,Marathi,"Art,Drama",A,128,28
+qadir.das,Qadir Das,5,2014-11-03,Subhash Das,Madhuri Das,76 MG Rd,Ahmedabad,Gujarat,380001,ST,Hindu,Gujarati,"Cricket,Music",B-,133,34
+wasim.iyer,Wasim Iyer,6,2013-04-14,Krishna Iyer,Sudha Iyer,88 Temple Rd,Coimbatore,Tamil Nadu,641001,General,Hindu,Tamil,"Dance,Art",O-,139,37
+cyrus.khan,Cyrus Khan,5,2014-08-30,Farooq Khan,Safiya Khan,12 Bazaar St,Lucknow,Uttar Pradesh,226001,General,Muslim,Urdu,"Poetry,Debate",A+,136,34
+isha.nair,Isha Nair,4,2015-03-22,Ajay Nair,Leela Nair,56 River Rd,Thiruvananthapuram,Kerala,695001,General,Hindu,Malayalam,"Music,Art",B+,129,31
+om.gupta,Om Gupta,6,2013-10-05,Sunil Gupta,Meena Gupta,90 Station Rd,Chandigarh,Chandigarh,160001,General,Hindu,Hindi,"Football,Science Club",A-,141,39
+suhani.desai,Suhani Desai,5,2014-01-19,Bhupesh Desai,Kavita Desai,34 Hill St,Surat,Gujarat,395001,OBC,Hindu,Gujarati,"Drama,Art",B-,134,32
+yashaswi.jal,Yashaswi Jal,6,2013-12-12,Raj Jal,Neha Jal,67 Garden Ln,Bhopal,Madhya Pradesh,462001,SC,Hindu,Hindi,"Music,Cricket",A,140,36
+eshwar.raut,Eshwar Raut,5,2014-05-07,Nikhil Raut,Priya Raut,78 Lake Rd,Nashik,Maharashtra,422001,General,Hindu,Marathi,"Badminton,Art",O+,137,35
+kaushik.sen,Kaushik Sen,4,2015-02-27,Anup Sen,Rina Sen,23 Gandhi St,Patna,Bihar,800001,OBC,Hindu,Bhojpuri,"Science Club,Dance",B+,130,29
+qasim.chawla,Qasim Chawla,5,2014-09-14,Deepak Chawla,Anjali Chawla,56 College St,Amritsar,Punjab,143001,General,Sikh,Punjabi,"Cricket,Music",A-,133,33
+waheeda.yadav,Waheeda Yadav,6,2013-07-08,Sunita Yadav,Ram Yadav,12 Temple St,Varanasi,Uttar Pradesh,221001,SC,Hindu,Hindi,"Drama,Art",B,135,34
+chetan.bhat,Chetan Bhat,5,2014-10-21,Manoj Bhat,Soni Bhat,88 Market Rd,Shimla,Himachal Pradesh,171001,General,Hindu,Hindi,"Art,Debate",O-,132,31
+isha.mehta,Isha Mehta,4,2015-03-12,Rajiv Mehta,Nisha Mehta,45 Lake Ave,Indore,Madhya Pradesh,452001,General,Jain,Marathi,"Chess,Drawing",A+,128,30

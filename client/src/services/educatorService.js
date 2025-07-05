@@ -77,3 +77,22 @@ export const registerStudents = async (students) => {
     throw error;
   }
 };
+export const fetchSessionPerformance = async () => {
+  try {
+    const response = await api.get('/api/data/session-performance');
+        const data = response.data;
+
+console.log("sessions:", data.sessions);
+console.log("overallTrends:", data.overallTrends);
+console.log("totalSessions:", data.totalSessions);
+    
+
+    
+    console.log("data.sessions",data.sessions); // Array of session data
+    console.log("data.over",data.overallTrends); // Trend analysis
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching session performance:', error);
+  }
+};

@@ -47,7 +47,9 @@ const educatorSchema = new mongoose.Schema({
 }, { timestamps: false });
 
 const sessionSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String,
+      unique:true,
+     required: true },
   description: { type: String, required: true },
   educatorId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +61,11 @@ const sessionSchema = new mongoose.Schema({
 
 
 const AcademicDataSchema = new mongoose.Schema({
+  sessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Session",
+    required: true
+  },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Student",
@@ -85,6 +92,11 @@ const AcademicDataSchema = new mongoose.Schema({
 
 
 const behaviorDataSchema= new mongoose.Schema({
+  sessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Session",
+    required: true
+  },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Student",

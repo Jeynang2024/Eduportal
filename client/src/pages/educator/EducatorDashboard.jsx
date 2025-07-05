@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Users, BookOpen, TrendingUp, Award, Calendar, MapPin, Star, Activity, Brain, Heart } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, AreaChart, Area } from 'recharts';
-import { getSessions, getStudents } from '../../services/educatorService';
+import { getSessions, getStudents ,fetchSessionPerformance } from '../../services/educatorService';
 // Helper to compute age from DateOfBirth string
 const COLORS = ['#8B5CF6','#06B6D4','#10B981','#F59E0B','#EF4444'];
 
@@ -50,6 +50,8 @@ const [extracurricularData,setExtracurricularData]=useState([])
     avgBeh: 0,
     combined: 0,
   });
+  const [OverallTrend,setOverallTrend]=useState([]);
+  const [studentPerformance,setStudentPerformance]=useState([]);
   // Sample data based on schema
   /*const sessionData = [
     { title: "Mathematics Fundamentals", description: "Basic algebra and geometry", date: "2025-07-01", students: 24 },
@@ -68,6 +70,20 @@ const [extracurricularData,setExtracurricularData]=useState([])
       setSessionData(sessions);
     
     });
+    fetchSessionPerformance().then(data=>{
+      console.log('🔄 Sessionwise data returned:', data, Array.isArray(data));
+      const sessiondata= data.sessions?.map(s => ({
+      name: s.sessionTitle,
+     academic: s.academicStats.averageScore,
+     behavioral: s.behaviorStats.averageScore,
+}));
+     const overallTrend=data.overallTrends
+      
+    
+setOverallTrend(overallTrend);
+setStudentPerformance(sessiondata);
+    
+    })
 
     getStudents().then(data => {
           console.log('🔄 get students returned:', data, Array.isArray(data))
@@ -144,6 +160,7 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
     });
     
   }, []);
+  /*
   const studentPerformance = [
     { month: 'Jan', literacy: 85, behavioral: 78, overall: 82 },
     { month: 'Feb', literacy: 88, behavioral: 82, overall: 85 },
@@ -151,7 +168,7 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
     { month: 'Apr', literacy: 92, behavioral: 88, overall: 90 },
     { month: 'May', literacy: 94, behavioral: 90, overall: 92 },
     { month: 'Jun', literacy: 96, behavioral: 92, overall: 94 }
-  ];
+  ];*/
 
  /* const gradeDistribution = [
     { grade: 'Grade 6', count: 45, color: '#8B5CF6' },
@@ -292,10 +309,10 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Area type="monotone" dataKey="literacy" stroke="#8B5CF6" fillOpacity={1} fill="url(#colorLiteracy)" />
+                    <Area type="monotone" dataKey="academic" stroke="#8B5CF6" fillOpacity={1} fill="url(#colorLiteracy)" />
                     <Area type="monotone" dataKey="behavioral" stroke="#06B6D4" fillOpacity={1} fill="url(#colorBehavioral)" />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -489,10 +506,10 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={studentPerformance}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="literacy" stroke="#8B5CF6" strokeWidth={3} />
+                  <Line type="monotone" dataKey="academic" stroke="#8B5CF6" strokeWidth={3} />
                   <Line type="monotone" dataKey="behavioral" stroke="#06B6D4" strokeWidth={3} />
                   <Line type="monotone" dataKey="overall" stroke="#10B981" strokeWidth={3} />
                 </LineChart>
@@ -501,19 +518,19 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Health Metrics</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Trend</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Avg Height</span>
-                    <span className="font-semibold">152 cm</span>
+                    <span className="text-gray-600">Academic Progress</span>
+                    <span className="font-semibold">{OverallTrend.academicProgress}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Avg Weight</span>
-                    <span className="font-semibold">45 kg</span>
+                    <span className="text-gray-600">Behavior Progress</span>
+                    <span className="font-semibold">{OverallTrend.behaviorProgress}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">BMI Range</span>
-                    <span className="font-semibold text-green-600">Normal</span>
+                    <span className="text-gray-600">Academic Trend</span>
+                    <span className="font-semibold text-green-600">{OverallTrend.academicTrend}</span>
                   </div>
                 </div>
               </div>
