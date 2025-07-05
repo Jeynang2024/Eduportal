@@ -38,7 +38,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { getStudentProfile } from "../../services/studentService";
+import { getStudentProfile ,getStudentPerformance} from "../../services/studentService";
 import { getUserFromToken } from "../../utils";
 import Cookies from "js-cookie";
 
@@ -50,6 +50,9 @@ const StudentDashboard = () => {
   const [profile, setProfile] = useState(null);
   const [AcademicData,setAcademicData]=useState([]);
   const [BehavioralData,setBehaviouralData]=useState([]);
+  const [OverallTrend,setOverallTrend]=useState([]);
+  const [studentPerformance,setStudentPerformance]=useState([]);
+   
   useEffect(() => {
     if (userId) {
       getStudentProfile(userId).then(setProfile);
@@ -64,6 +67,22 @@ const StudentDashboard = () => {
       setBehaviouralData(data[0]);
       console.log("student data",data[0])
 
+    })
+    getStudentPerformance().then(data=>{
+console.log('🔄 Sessionwise data returned:', data, Array.isArray(data));
+      const sessiondata= data.sessions?.map(s => ({
+      name: s.sessionTitle,
+      subjectAvg:s.academicStats.subjectAverages,
+     academic: s.academicStats.averageScore,
+     behavioral: s.behaviorStats.averageScore,
+}));
+
+
+     const overallTrend=data.overallTrends
+      
+    
+setOverallTrend(overallTrend);
+setStudentPerformance(sessiondata);
     })
 
 
@@ -342,14 +361,14 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
               <PersonalCard
                 icon={TrendingUp}
                 title="Literacy Score"
-                value={`${studentProfile.literacyscore}%`}
+                value={`${studentProfile.literacyscore.toFixed(2)}%`}
                 subtitle="Above average"
                 gradient="bg-gradient-to-br from-green-500 to-green-700"
               />
               <PersonalCard
                 icon={Heart}
                 title="Behavior Score"
-                value={`${studentProfile.behavioralScore}%`}
+                value={`${studentProfile.behavioralScore.toFixed(2)}%`}
                 subtitle="Excellent conduct"
                 gradient="bg-gradient-to-br from-purple-500 to-purple-700"
               />
@@ -377,7 +396,7 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                 </div>
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={academicProgress}>
+                  <AreaChart data={studentPerformance}>
                     <defs>
                       <linearGradient
                         id="colorMath"
@@ -417,19 +436,19 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Area
                       type="monotone"
-                      dataKey="math"
+                      dataKey="academic"
                       stroke="#8B5CF6"
                       fillOpacity={1}
                       fill="url(#colorMath)"
                     />
                     <Area
                       type="monotone"
-                      dataKey="science"
+                      dataKey="behavioral"
                       stroke="#06B6D4"
                       fillOpacity={1}
                       fill="url(#colorScience)"
@@ -473,7 +492,7 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
                 <ProgressRing
-                  percentage={studentProfile.literacyscore}
+                  percentage={studentProfile.literacyscore.toFixed(2)}
                   color="#8B5CF6"
                 />
                 <h4 className="text-lg font-semibold text-gray-900 mt-4">
@@ -484,7 +503,7 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
 
               <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
                 <ProgressRing
-                  percentage={studentProfile.behavioralScore}
+                  percentage={studentProfile.behavioralScore.toFixed(2)}
                   color="#10B981"
                 />
                 <h4 className="text-lg font-semibold text-gray-900 mt-4">
@@ -544,46 +563,33 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                 Academic Performance Trends
               </h3>
               <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={academicProgress}>
+                <LineChart data={studentPerformance}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Line
                     type="monotone"
-                    dataKey="math"
+                    dataKey="subjectAvg.maths"
                     stroke="#8B5CF6"
                     strokeWidth={3}
                     name="Mathematics"
                   />
                   <Line
                     type="monotone"
-                    dataKey="science"
+                    dataKey="subjectAvg.physics"
                     stroke="#06B6D4"
                     strokeWidth={3}
-                    name="Science"
+                    name="Physics"
                   />
                   <Line
                     type="monotone"
-                    dataKey="english"
+                    dataKey="subjectAvg.chemistry"
                     stroke="#10B981"
                     strokeWidth={3}
-                    name="English"
+                    name="Chemistry"
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="history"
-                    stroke="#F59E0B"
-                    strokeWidth={3}
-                    name="History"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="geography"
-                    stroke="#EF4444"
-                    strokeWidth={3}
-                    name="Geography"
-                  />
+                 
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -611,15 +617,15 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                 <div className="space-y-4">
                   <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                     <h4 className="font-semibold text-green-800">
-                      Strongest Subject
+                       Academic Trend
                     </h4>
-                    <p className="text-green-700">Science - 96% (Excellent)</p>
+                    <p className="text-green-700">{OverallTrend.academicTrend}</p>
                   </div>
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h4 className="font-semibold text-blue-800">
-                      Most Improved
+                      Academic Progress
                     </h4>
-                    <p className="text-blue-700">Mathematics - +14 points</p>
+                    <p className="text-blue-700">{OverallTrend.academicProgress}</p>
                   </div>
                   <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                     <h4 className="font-semibold text-orange-800">
@@ -725,10 +731,10 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
             <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
                 <Calendar className="h-6 w-6 mr-2 text-blue-600" />
-                Upcoming Sessions
+                Sessions
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcomingSessions.map((session, index) => (
+                {studentPerformance.map((session, index) => (
                   <div
                     key={index}
                     className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 hover:shadow-md transition-all duration-300"
@@ -742,21 +748,29 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                       </span>
                     </div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                      {session.title}
+                      {session.name}
                     </h4>
                     <div className="space-y-2 text-sm text-gray-600">
+                       <div className="flex items-center">
+                        {/* <Calendar className="h-4 w-4 mr-2" />
+                        {new Date(session.date).toLocaleDateString()}*/}
+                        <p>Academic Score:&nbsp;{session.academic}</p>
+
+                      </div> 
                       <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        {new Date(session.date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
+                        {/* <Calendar className="h-4 w-4 mr-2" />
+                        {new Date(session.date).toLocaleDateString()}*/}
+                        <p>Behavioural Score:&nbsp;{session.behavioral}</p>
+
+                      </div> 
+                      {/* <div className="flex items-center">
                         <Clock className="h-4 w-4 mr-2" />
                         {session.time}
-                      </div>
-                      <div className="flex items-center">
+                      </div> */}
+                      {/* <div className="flex items-center">
                         <User className="h-4 w-4 mr-2" />
                         {session.educator}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 ))}

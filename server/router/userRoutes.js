@@ -181,7 +181,7 @@ router.post("/register/educator", async (req, res) => {
   if (!name || !password || !email || !location || !qualification) {
     return res.status(400).json({ error: "All fields are required" });
   }
-  //console.log("name from register educator",name);
+  console.log("name from register educator",name);
   const existuser = await User.findOne({ email });
   if (existuser) {
     return res.status(400).json({ error: "User already exists" });

@@ -7,6 +7,7 @@ import {
   Behaviour,
 } from "../schema/userSchema.js";
 import Student from "../schema/studentSchema.js";
+import authenticateJWT from "../middleware/jwtToken.js";
 
 const router = express.Router();
 
@@ -142,6 +143,78 @@ router.post("/behaviour/data", async (req, res) => {
 
 
 
+//student stats performance chart 
+
+
+router.get("/student-performance",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id;
+    // 1. Get all sessions sorted from oldest to newest
+    const sessions = await Session.find()
+      .sort({ createdAt: 1 }) // 1 for ascending (oldest first)
+      .lean();
+    const student_obj=await Student.findOne({student_id})
+    //console.log("student",student_obj);
+    const studentId=student_obj._id;
+    if (!sessions || sessions.length === 0) {
+      return res.status(404).json({ error: "No sessions found" });
+    } //console.log("studentId",studentId);
+
+    // 2. Process each session to get performance data
+    const sessionPerformance = await Promise.all(
+      sessions.map(async (session) => {
+        // Get academic data for this session
+        const academicRecords = await AcademicData.find({
+          sessionId: session._id,
+          studentId,
+
+        }).lean();
+        //console.log("academic",academicRecords)
+        // Get behavioral data for this session
+        const behaviorRecords = await Behaviour.find({
+          sessionId: session._id,
+          studentId,
+          
+        }).lean();
+
+        // Calculate academic averages
+        const academicStats = calculateAcademicAverages(academicRecords);
+
+        // Calculate behavioral averages
+        const behaviorStats = calculateBehavioralAverages(behaviorRecords);
+
+        return {
+          sessionId: session._id,
+          sessionTitle: session.title,
+          academicStats,
+          behaviorStats,
+          studentCount: academicRecords.length, // Number of students in this session
+        };
+      })
+    );
+
+    // 3. Calculate overall trends
+    const overallTrends = calculateOverallTrends(sessionPerformance);
+   // console.log("sessons:",sessionPerformance)
+    return res.status(200).json({
+      sessions: sessionPerformance,
+      overallTrends,
+      totalSessions: sessions.length,
+    });
+  } catch (error) {
+    console.error("Error fetching session performance:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
+
+
+
+
+
 
 router.get("/session-performance", async (req, res) => {
   try {
@@ -185,7 +258,7 @@ router.get("/session-performance", async (req, res) => {
 
     // 3. Calculate overall trends
     const overallTrends = calculateOverallTrends(sessionPerformance);
-    console.log("sessons:",sessionPerformance)
+    //console.log("sessons:",sessionPerformance)
     return res.status(200).json({
       sessions: sessionPerformance,
       overallTrends,

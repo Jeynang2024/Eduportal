@@ -25,6 +25,10 @@ const educatorSchema = new mongoose.Schema({
     type: Boolean,
     default: false // Default value for approved field
   },
+  name:{
+    type:String,
+    required:true,
+  },
   email:{
     type: String,
     required: true,

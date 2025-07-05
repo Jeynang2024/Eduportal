@@ -39,3 +39,21 @@ export const getScholarships = () => {
   console.log('Fetching Scholarships');
   return { scholarships: ['mock1', 'mock2'] };
 };
+
+export const getStudentPerformance=async ()=>{
+    try {
+    const response = await api.get('/api/data/student-performance');
+        const data = response.data;
+
+console.log("sessions:", data.sessions);
+console.log("overallTrends:", data.overallTrends);
+console.log("totalSessions:", data.totalSessions);
+    
+
+    
+   
+    return data;
+  } catch (error) {
+    console.error('Error fetching session performance:', error);
+  }
+}
