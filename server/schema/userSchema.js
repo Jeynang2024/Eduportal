@@ -124,11 +124,29 @@ const behaviorDataSchema= new mongoose.Schema({
     }
   ]
 });
+const achievementSchema = new mongoose.Schema({
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Student",
+    required: true
+  },username :{
+    type: String,
+    required:true,
 
-  
+  },
+  criteria: [
+    {
+        title:        { type: String, required: true },
+
+      category:     { type: String, enum: ['Academic', 'Behavioral', 'Competition'], required: true },
+    }
+  ]  
+});
+
+const Achievement = mongoose.model('Achievement', achievementSchema); 
 const User = mongoose.model("User", userSchema);
 const Behaviour=mongoose.model("Behaviour", behaviorDataSchema);
 const Educator = mongoose.model("Educator", educatorSchema);
 const Session = mongoose.model("Session", sessionSchema);
 const AcademicData = mongoose.model("AcademicData", AcademicDataSchema);
-export {User,Educator,Session,AcademicData,Behaviour};
+export {User,Educator,Session,AcademicData,Behaviour,Achievement};

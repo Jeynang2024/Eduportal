@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { User, Educator, Session, AcademicData,Behaviour } from "../schema/userSchema.js";
+import { User, Educator, Session, AcademicData,Behaviour, Achievement } from "../schema/userSchema.js";
 import Student from "../schema/studentSchema.js";
 import dotenv from "dotenv";
 import authenticateJWT from "../middleware/jwtToken.js";
@@ -359,9 +359,27 @@ if (!academic) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+///student/achievement/data
 
-
-
+router.get("/student/achievement/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    //console.log("student :",student)
+    const achievement= await Achievement.find({studentId:student[0]._id})
+if (!achievement) {
+      return res.status(404).json({ error: "Achievement data not found" });
+    }
+    //console.log("academic",academic)
+    res.status(200).json(achievement);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 

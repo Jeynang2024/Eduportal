@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getStudentData ,getStudentBehaviouralData} from "../../services/studentService";
+import { getStudentData ,getstudentsAchievements,getStudentBehaviouralData} from "../../services/studentService";
 const COLORS =["#8B5CF6","#06B6D4","#10B981","#F59E0B","#EF4444"]
 const BEHAVIOR_COLORS = ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
 
@@ -52,6 +52,7 @@ const StudentDashboard = () => {
   const [BehavioralData,setBehaviouralData]=useState([]);
   const [OverallTrend,setOverallTrend]=useState([]);
   const [studentPerformance,setStudentPerformance]=useState([]);
+  const [achievements,setachievementsdata]=useState([]);
    
   useEffect(() => {
     if (userId) {
@@ -60,16 +61,31 @@ const StudentDashboard = () => {
 
     getStudentData().then(data=>{
       setAcademicData(data[0]);
-      console.log("student data",data[0])
+      //console.log("student data",data[0])
     })
 
     getStudentBehaviouralData().then(data=>{
       setBehaviouralData(data[0]);
-      console.log("student data",data[0])
+      //console.log("student data",data[0])
 
     })
+
+   getstudentsAchievements().then(data=>{
+   // console.log('Achievements state:', achievements);
+//console.log('Is array?', Array.isArray(achievements));
+      console.log("achievement data",data[0])
+      const achieve= data[0].criteria?.map(s => ({
+      title: s.title,
+      category:s.category,
+      
+}));
+
+    setachievementsdata(achieve);
+
+   })
+
     getStudentPerformance().then(data=>{
-console.log('🔄 Sessionwise data returned:', data, Array.isArray(data));
+//console.log('🔄 Sessionwise data returned:', data, Array.isArray(data));
       const sessiondata= data.sessions?.map(s => ({
       name: s.sessionTitle,
       subjectAvg:s.academicStats.subjectAverages,
@@ -219,7 +235,7 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
     { criteria: "Responsibility", score: 87 },
   ];*/
 
-  const upcomingSessions = [
+  /*const upcomingSessions = [
     {
       title: "Advanced Physics",
       date: "2025-07-01",
@@ -238,8 +254,8 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
       time: "9:00 AM",
       educator: "Mr. Singh",
     },
-  ];
-
+  ];*/
+/*
   const achievements = [
     { title: "Science Excellence", date: "May 2025", type: "Academic" },
     { title: "Best Team Player", date: "April 2025", type: "Behavioral" },
@@ -248,7 +264,7 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
       date: "March 2025",
       type: "Competition",
     },
-  ];
+  ];*/
 
   const PersonalCard = ({ icon: Icon, title, value, subtitle, gradient }) => (
     <div
@@ -542,13 +558,13 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                     <div className="flex items-center mb-2">
                       <Award className="h-5 w-5 text-yellow-600 mr-2" />
                       <span className="text-xs font-medium text-yellow-800 bg-yellow-200 px-2 py-1 rounded">
-                        {achievement.type}
+                        {achievement.category}
                       </span>
                     </div>
                     <h4 className="font-semibold text-gray-900">
                       {achievement.title}
                     </h4>
-                    <p className="text-sm text-gray-600">{achievement.date}</p>
+                    <p className="text-sm text-gray-600">{achievement.category}</p>
                   </div>
                 ))}
               </div>
@@ -629,10 +645,10 @@ const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
                   </div>
                   <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                     <h4 className="font-semibold text-orange-800">
-                      Focus Area
+                      Behaviour Trend
                     </h4>
                     <p className="text-orange-700">
-                      History - Room for improvement
+                      {OverallTrend.behaviorTrend}
                     </p>
                   </div>
                 </div>

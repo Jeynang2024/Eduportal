@@ -5,6 +5,7 @@ import {
   Session,
   AcademicData,
   Behaviour,
+  Achievement,
 } from "../schema/userSchema.js";
 import Student from "../schema/studentSchema.js";
 import authenticateJWT from "../middleware/jwtToken.js";
@@ -141,6 +142,60 @@ router.post("/behaviour/data", async (req, res) => {
   }
 });
 
+
+router.post("/achivement/data", async (req, res) => {
+  const totalData = req.body;
+  try {
+    console.log("totl:",totalData)
+    if (!Array.isArray(totalData)) {
+      return res
+        .status(400)
+        .json({ error: "Invalid data format. Expected an array." });
+    }
+    // const recentSession = await Session.findOne()
+    //   .sort({ createdAt: -1 }) // Get the most recently created session
+    //   .limit(1);
+
+    // if (!recentSession) {
+    //   return res.status(404).json({ error: "No sessions found" });
+    // }
+
+    for (const rowdata of totalData) {
+      const { username, criteria } = rowdata;
+      if (!username || !Array.isArray(criteria)) {
+        return res
+          .status(400)
+          .json({
+            error: "Each entry must have a username and an array of subjects.",
+          });
+      }
+
+      const user = await User.findOne({ username });
+      const student = await Student.findOne({student_id: user._id});
+      if (!student) {
+        return res.status(404).json({ error: `Student ${username} not found` });
+      }
+
+      
+      const newAchivement = new Achievement({
+        criteria,
+        studentId: student._id,
+        
+        username,
+      });
+      await newAchivement.save();
+
+  
+    }
+
+    return res
+      .status(201)
+      .json({ message: "Achievment data added " });
+  } catch (error) {
+    console.error("Error during adding data:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 //student stats performance chart 

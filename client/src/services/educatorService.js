@@ -77,6 +77,19 @@ export const registerStudents = async (students) => {
     throw error;
   }
 };
+
+
+export const addAchivementData = async (data) => {
+  try {
+    console.log("data",data);
+    const res = await api.post("/api/data/achivement/data", data);
+    return { success: true, ...res.data };
+  } catch (error) {
+    console.error("Error adding achievement data:", error);
+    return { success: false, error: error.response?.data?.error || "Failed to add achievement data" };
+  }
+};
+
 export const fetchSessionPerformance = async () => {
   try {
     const response = await api.get('/api/data/session-performance');
@@ -88,9 +101,7 @@ console.log("totalSessions:", data.totalSessions);
     
 
     
-    console.log("data.sessions",data.sessions); // Array of session data
-    console.log("data.over",data.overallTrends); // Trend analysis
-    
+   
     return data;
   } catch (error) {
     console.error('Error fetching session performance:', error);

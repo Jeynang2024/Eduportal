@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import AddSessionForm from "../../components/educator/add-data/AddSessionForm";
 import AddAcademicDataForm from "../../components/educator/add-data/AddAcademicDataForm";
 import AddBehaviouralDataForm from "../../components/educator/add-data/AddBehaviouralDataForm";
-
+import AddAchivementDataForm from "../../components/educator/add-data/AddAchivements";
 const tabList = [
   { key: "session", label: "Add Session" },
   { key: "academic", label: "Add Academic Data" },
   { key: "behavioural", label: "Add Behavioural Data" },
+  { key: "achivement", label: "Add Achivement Data" },
+
 ];
 
 
@@ -29,6 +31,8 @@ const AddData = () => {
         {tab === "session" && <AddSessionForm />}
         {tab === "academic" && <AddAcademicDataForm />}
         {tab === "behavioural" && <AddBehaviouralDataForm />}
+        {tab === "achivement" && <AddAchivementDataForm />}
+
       </div>
     </div>
   );

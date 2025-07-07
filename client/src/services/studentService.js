@@ -33,7 +33,15 @@ export const getStudentBehaviouralData=async ()=>{
     return null;
   }
 }
-
+export const getstudentsAchievements=async ()=>{
+   try {
+    const res = await api.get(`/api/user/student/achievement/data`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching student achievement data:", error);
+    return null;
+  }
+}
 
 export const getScholarships = () => {
   console.log('Fetching Scholarships');
