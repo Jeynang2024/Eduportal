@@ -46,24 +46,24 @@ window.location.href = '/';
         </div>
         <ul className="flex space-x-6 text-sm font-medium">
           <li>
-            <a href="/student/dashboard" className="hover:text-yellow-300">
+            <Link to="/student/dashboard" className="hover:text-yellow-300">
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/student/leaderboard" className="hover:text-yellow-300">
+            <Link to="/student/leaderboard" className="hover:text-yellow-300">
               Leaderboard
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/student/scholarships" className="hover:text-yellow-300">
+            <Link to="/student/scholarships" className="hover:text-yellow-300">
               Scholorship
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/student/profile" className="hover:text-yellow-300">
+            <Link to="/student/profile" className="hover:text-yellow-300">
               Student Profile
-            </a>
+            </Link>
           </li>
            <li>
          <button
