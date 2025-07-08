@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom'; // or useHistory for v5
+import { useNavigate,Link } from 'react-router-dom'; // or useHistory for v5
 
 const NavbarEducator = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
