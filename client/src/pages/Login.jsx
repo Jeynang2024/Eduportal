@@ -19,11 +19,16 @@ const Login = () => {
     const res = await login({ username, password });
     setLoading(false);
     if (res.success) {
-        console.log("Login response:", res);
+       console.log("Login response:", res);
       toast.success("Login successful!");
       // Decode token from cookie (need to fetch it)
-      const token = getCookie("accessToken");
-    //   console.log("Token:", token);
+      //const token = getCookie("accessToken");
+      const token = res.token;
+      // after login
+localStorage.setItem("token", res.token);
+
+    console.log("Token:", token);
+
       if (token) {
         const decoded = jwtDecode(token);
         updateUserState({
@@ -48,7 +53,8 @@ const Login = () => {
 
   // Helper to get cookie value
   function getCookie(name) {
-    const cookie = Cookies.get(name);
+   const cookie = Cookies.get(name);
+
     // const cookies = document.cookie.split(";").map((c) => c.trim());
     // for (const cookie of cookies) {
     //   if (cookie.startsWith(name + "=")) {

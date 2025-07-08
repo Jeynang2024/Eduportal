@@ -201,14 +201,11 @@ router.post("/register/educator", async (req, res) => {
     await newUser.save();
     newEducator.educatorId = newUser._id; // Set the educatorId to the new user's ID
     await newEducator.save();
-    const token = jwt.sign({ id: newUser._id, role: newUser.role }, secret, {
-      expiresIn: "1h",
-    });
+    // const token = jwt.sign({ id: newUser._id, role: newUser.role }, secret, {
+    //   expiresIn: "1h",
+    // });
     res
-      .cookie("accessToken", token, {
-        // httpOnly: true,
-        maxAge: 60 * 60 * 1000,
-      })
+      
       .status(200)
       .json({ message: "Login successful" });
   } catch (error) {
@@ -274,12 +271,14 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       });
       res
-        .cookie("accessToken", token, {
-          // httpOnly: true,
-          maxAge: 60 * 60 * 1000,
-        })
+        // .cookie("accessToken", token, {
+        //   // httpOnly: true,
+        //   secure: true,
+        //   sameSite: "None",
+        //   maxAge: 60 * 60 * 1000,
+        // })
         .status(200)
-        .json({ message: "Login successful" });
+        .json({ message: "Login successful" ,token});
     } else if (role == "student") {
       const student = await Student.findOne({
         student_id: user._id.toString(),
@@ -292,12 +291,12 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       });
       res
-        .cookie("accessToken", token, {
-          // httpOnly: true,
-          maxAge: 60 * 60 * 1000,
-        })
+        // .cookie("accessToken", token, {
+        //   // httpOnly: true,
+        //   maxAge: 60 * 60 * 1000,
+        // })
         .status(200)
-        .json({ message: "Login successful", user: student });
+        .json({ message: "Login successful", user: student,token });
     }
   } catch (error) {
     console.error("Error logging in:", error);

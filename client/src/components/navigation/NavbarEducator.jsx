@@ -9,7 +9,9 @@ const [cookies, , removeCookie] = useCookies(['authToken']);
 
   const handleLogout = () => {
     // Remove the authentication cookie
-    removeCookie('accessToken', { path: '/' });
+    localStorage.removeItem("token");
+
+    //removeCookie('accessToken', { path: '/' });
     // Redirect to homepage
 window.location.href = '/';
   };

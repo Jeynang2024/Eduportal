@@ -271,10 +271,11 @@ router.get("/student-performance",authenticateJWT, async (req, res) => {
 
 
 
-router.get("/session-performance", async (req, res) => {
+router.get("/session-performance",authenticateJWT, async (req, res) => {
   try {
     // 1. Get all sessions sorted from oldest to newest
-    const sessions = await Session.find()
+    const educatorId=req.id;
+    const sessions = await Session.find({educatorId})
       .sort({ createdAt: 1 }) // 1 for ascending (oldest first)
       .lean();
 

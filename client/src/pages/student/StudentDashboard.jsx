@@ -44,7 +44,8 @@ import Cookies from "js-cookie";
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState("home");
-  const accessToken = Cookies.get("accessToken");
+  const accessToken =  localStorage.getItem("token");
+
   const user = getUserFromToken(accessToken);
   const userId = user?.id;
   const [profile, setProfile] = useState(null);

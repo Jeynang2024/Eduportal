@@ -260,8 +260,8 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
               />
               <StatCard
                 icon={Activity}
-                title="Engagement Rate"
-                value="94%"
+                title="Average Rate"
+                value={(averages.combined/10).toFixed(2)}
                 subtitle="Student participation"
                 color="bg-gradient-to-r from-orange-500 to-orange-600"
                 trend="3"
