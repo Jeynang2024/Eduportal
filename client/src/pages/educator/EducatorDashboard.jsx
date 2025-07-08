@@ -160,25 +160,11 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
     });
     
   }, []);
-  /*
-  const studentPerformance = [
-    { month: 'Jan', literacy: 85, behavioral: 78, overall: 82 },
-    { month: 'Feb', literacy: 88, behavioral: 82, overall: 85 },
-    { month: 'Mar', literacy: 90, behavioral: 85, overall: 88 },
-    { month: 'Apr', literacy: 92, behavioral: 88, overall: 90 },
-    { month: 'May', literacy: 94, behavioral: 90, overall: 92 },
-    { month: 'Jun', literacy: 96, behavioral: 92, overall: 94 }
-  ];*/
+ 
 
- /* const gradeDistribution = [
-    { grade: 'Grade 6', count: 45, color: '#8B5CF6' },
-    { grade: 'Grade 7', count: 38, color: '#06B6D4' },
-    { grade: 'Grade 8', count: 42, color: '#10B981' },
-    { grade: 'Grade 9', count: 35, color: '#F59E0B' },
-    { grade: 'Grade 10', count: 28, color: '#EF4444' }
-  ];*/
 
- const subjectMastery = [
+
+ /*const subjectMastery = [
     { subject: 'Math', mastery: 88, students: 45 },
     { subject: 'Science', mastery: 92, students: 38 },
     { subject: 'English', mastery: 85, students: 42 },
@@ -194,15 +180,8 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
     { aspect: 'Creativity', value: 90 },
     { aspect: 'Responsibility', value: 86 }
   ];
-
-  /*const extracurricularData = [
-    { activity: 'Sports', count: 45 },
-    { activity: 'Music', count: 32 },
-    { activity: 'Art', count: 28 },
-    { activity: 'Drama', count: 20 },
-    { activity: 'Debate', count: 15 },
-    { activity: 'Coding', count: 25 }
-  ];*/
+*/
+  
 
   const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
@@ -352,7 +331,7 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
               </div>
             </div>
 
-            {/* Subject Mastery & Behavioral Analysis */}
+            {/* Subject Mastery & Behavioral Analysis 
             <div className="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -391,7 +370,7 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
-            </div>
+            </div>*/}
           </div>
         )}
 
@@ -410,7 +389,7 @@ const students = Object.values(data).filter(s => !isNaN(s.grade));
                   <p className="text-gray-600 text-sm mb-4">{session.description}</p>
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="h-4 w-4 mr-1" />
-                    {new Date(session.date).toLocaleDateString()}
+                    {new Date(session.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               ))}

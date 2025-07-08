@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-const secret=process.env.JWT_SECRET || "your";
+const secret=process.env.JWT_SECRET ;
 
 function authenticateJWT(req, res, next) {
   const token = req.cookies.accessToken;
