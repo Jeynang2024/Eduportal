@@ -1,6 +1,7 @@
 import  { useEffect } from "react";
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
+
 const NavbarStudent = () => {
   const [cookies, , removeCookie] = useCookies(['authToken']);
   const navigate = useNavigate();
