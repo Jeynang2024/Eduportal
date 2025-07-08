@@ -71,8 +71,11 @@ const router = createHashRouter([
   {
     path: "*",
     element: <NotFound />,
-  },
-]);
+  }
+],{
+  basename: "/Eduportal"
+}
+);
 
 const App = () => {
   return <RouterProvider router={router} />;
