@@ -99,12 +99,12 @@ window.location.href = '/';
             <div className="px-4 py-3 border-b border-blue-100">
               <div className="text-xs text-gray-500">Educator</div>
             </div>
-            <a
-              href="/educator/profile"
+            <Link
+              to="/educator/profile"
               className="block px-4 py-2 text-blue-700 hover:bg-blue-50 transition-colors"
             >
               Profile
-            </a>
+            </Link>
             <button 
               onClick={handleLogout}
 
