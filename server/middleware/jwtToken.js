@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-const secret=process.env.JWT_SECRET || "your";
-
+const secret=process.env.JWT_SECRET || "your" ;
 function authenticateJWT(req, res, next) {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json({ error: 'Not authenticated' });
-
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(" ")[1];
+     if (!token) return res.status(401).json({ error: 'Not authenticated' });
+    console.log("jwt",token);
   try {
     const payload = jwt.verify(token, secret);
     req.id = payload.id;

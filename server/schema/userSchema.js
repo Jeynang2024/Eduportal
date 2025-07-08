@@ -25,6 +25,10 @@ const educatorSchema = new mongoose.Schema({
     type: Boolean,
     default: false // Default value for approved field
   },
+  name:{
+    type:String,
+    required:true,
+  },
   email:{
     type: String,
     required: true,
@@ -47,7 +51,9 @@ const educatorSchema = new mongoose.Schema({
 }, { timestamps: false });
 
 const sessionSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String,
+      unique:true,
+     required: true },
   description: { type: String, required: true },
   educatorId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +65,11 @@ const sessionSchema = new mongoose.Schema({
 
 
 const AcademicDataSchema = new mongoose.Schema({
+  sessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Session",
+    required: true
+  },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Student",
@@ -85,6 +96,11 @@ const AcademicDataSchema = new mongoose.Schema({
 
 
 const behaviorDataSchema= new mongoose.Schema({
+  sessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Session",
+    required: true
+  },
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Student",
@@ -108,11 +124,29 @@ const behaviorDataSchema= new mongoose.Schema({
     }
   ]
 });
+const achievementSchema = new mongoose.Schema({
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Student",
+    required: true
+  },username :{
+    type: String,
+    required:true,
 
-  
+  },
+  criteria: [
+    {
+        title:        { type: String, required: true },
+
+      category:     { type: String, enum: ['Academic', 'Behavioral', 'Competition'], required: true },
+    }
+  ]  
+});
+
+const Achievement = mongoose.model('Achievement', achievementSchema); 
 const User = mongoose.model("User", userSchema);
 const Behaviour=mongoose.model("Behaviour", behaviorDataSchema);
 const Educator = mongoose.model("Educator", educatorSchema);
 const Session = mongoose.model("Session", sessionSchema);
 const AcademicData = mongoose.model("AcademicData", AcademicDataSchema);
-export {User,Educator,Session,AcademicData,Behaviour};
+export {User,Educator,Session,AcademicData,Behaviour,Achievement};

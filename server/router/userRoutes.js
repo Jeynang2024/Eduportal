@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-import { User, Educator, Session, AcademicData } from "../schema/userSchema.js";
+import { User, Educator, Session, AcademicData,Behaviour, Achievement } from "../schema/userSchema.js";
 import Student from "../schema/studentSchema.js";
 import dotenv from "dotenv";
 import authenticateJWT from "../middleware/jwtToken.js";
@@ -62,11 +62,11 @@ router.get("/students", async (req, res) => {
 
 router.get("/session",authenticateJWT, async (req, res) => {
   try {
-    console.log("req:",req)
+    //console.log("req:",req)
     const educatorId=req.id
-  console.log("educator:",educatorId);
+  //console.log("educator:",educatorId);
     const sessions = await Session.find({educatorId});
-    console.log("this",sessions);
+    //console.log("this",sessions);
     if (!sessions) {
       return res.status(404).json({ error: "No sessions found" });
     }
@@ -80,7 +80,7 @@ router.get("/session",authenticateJWT, async (req, res) => {
 router.post("/register/students",authenticateJWT,async (req, res) => {
   try {
     const educatorId=req.id;
-    console.log("educator from st:",educatorId);
+    //console.log("educator from st:",educatorId);
     const studentsData = req.body; // Expecting an array of student objects
     
     if (!Array.isArray(studentsData)) {
@@ -92,7 +92,7 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
     //const results = [];
 
     for (const studentData of studentsData) {
-      console.log("entered");
+      //console.log("entered");
       const {
         username,
         password,
@@ -111,7 +111,6 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
         height,
         weight,
       } = studentData;
-
       // Check if the user already exists based on the username
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -121,6 +120,7 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
 
       // Create a new user with role set to 'student'
       //const salt = await bcrypt.genSalt(10);
+      //console.log("pass",password);
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new User({
@@ -130,7 +130,7 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
       });
 
       const savedUser = await newUser.save();
-            console.log("user:",savedUser);
+            //console.log("user:",savedUser);
 
       // Create a new student with the user ID reference
       const newStudent = new Student({
@@ -151,10 +151,10 @@ router.post("/register/students",authenticateJWT,async (req, res) => {
         height,
         weight,
       });
-          console.log("notsaved:",newStudent);
+          //console.log("notsaved:",newStudent);
 
       await newStudent.save();
-      console.log("saved:",newStudent);
+      //console.log("saved:",newStudent);
       //results.push({ username, status: "success", message: "Student registered successfully" });
     }
     res
@@ -181,13 +181,14 @@ router.post("/register/educator", async (req, res) => {
   if (!name || !password || !email || !location || !qualification) {
     return res.status(400).json({ error: "All fields are required" });
   }
+  console.log("name from register educator",name);
   const existuser = await User.findOne({ email });
   if (existuser) {
     return res.status(400).json({ error: "User already exists" });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({ username, password: hashedPassword, role });
-  console.log(name)
+  //console.log(name)
   const newEducator = new Educator({
     name:name,
     email,
@@ -200,14 +201,11 @@ router.post("/register/educator", async (req, res) => {
     await newUser.save();
     newEducator.educatorId = newUser._id; // Set the educatorId to the new user's ID
     await newEducator.save();
-    const token = jwt.sign({ id: newUser._id, role: newUser.role }, secret, {
-      expiresIn: "1h",
-    });
+    // const token = jwt.sign({ id: newUser._id, role: newUser.role }, secret, {
+    //   expiresIn: "1h",
+    // });
     res
-      .cookie("accessToken", token, {
-        // httpOnly: true,
-        maxAge: 60 * 60 * 1000,
-      })
+      
       .status(200)
       .json({ message: "Login successful" });
   } catch (error) {
@@ -250,20 +248,22 @@ router.post("/login", async (req, res) => {
   try {
     const newuser = await User.find({ username });
     const user = newuser[0];
-    console.log(user);
+    //console.log(user);
     if (!user) {
       return res.status(401).json({ error: " username doesnot exist" });
-    }
+    }   // console.log("found");
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      //console.log("entered")
       return res.status(401).json({ error: "Invalid password" });
-    }
+    }//console.log("matched");
     const role = user.role;
     if (role == "educator") {
       const educator = await Educator.findOne({
         educatorId: user._id.toString(),
       });
-      console.log(educator);
+      //console.log(educator);
       if (!educator) {
         return res.status(404).json({ error: "Educator not found" });
       }
@@ -271,12 +271,14 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       });
       res
-        .cookie("accessToken", token, {
-          // httpOnly: true,
-          maxAge: 60 * 60 * 1000,
-        })
+        // .cookie("accessToken", token, {
+        //   // httpOnly: true,
+        //   secure: true,
+        //   sameSite: "None",
+        //   maxAge: 60 * 60 * 1000,
+        // })
         .status(200)
-        .json({ message: "Login successful" });
+        .json({ message: "Login successful" ,token});
     } else if (role == "student") {
       const student = await Student.findOne({
         student_id: user._id.toString(),
@@ -289,12 +291,12 @@ router.post("/login", async (req, res) => {
         expiresIn: "1h",
       });
       res
-        .cookie("accessToken", token, {
-          // httpOnly: true,
-          maxAge: 60 * 60 * 1000,
-        })
+        // .cookie("accessToken", token, {
+        //   // httpOnly: true,
+        //   maxAge: 60 * 60 * 1000,
+        // })
         .status(200)
-        .json({ message: "Login successful", user: student });
+        .json({ message: "Login successful", user: student,token });
     }
   } catch (error) {
     console.error("Error logging in:", error);
@@ -317,6 +319,69 @@ router.get("/student",authenticateJWT, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+router.get("/student/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    //console.log("student :",student)
+    const academic= await AcademicData.find({studentId:student[0]._id})
+if (!academic) {
+      return res.status(404).json({ error: "Academic data not found" });
+    }
+    //console.log("academic",academic)
+    res.status(200).json(academic);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router.get("/student/behavioural/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    //console.log("student :",student)
+    const academic= await Behaviour.find({studentId:student[0]._id})
+if (!academic) {
+      return res.status(404).json({ error: "Academic data not found" });
+    }
+    //console.log("academic",academic)
+    res.status(200).json(academic);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+///student/achievement/data
+
+router.get("/student/achievement/data",authenticateJWT, async (req, res) => {
+  try {
+    const student_id=req.id
+    const student = await Student.find({student_id });
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+    //console.log("student :",student)
+    const achievement= await Achievement.find({studentId:student[0]._id})
+if (!achievement) {
+      return res.status(404).json({ error: "Achievement data not found" });
+    }
+    //console.log("academic",academic)
+    res.status(200).json(achievement);
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 
 router.get("/student/:id", async (req, res) => {
@@ -348,7 +413,7 @@ router.get("/educator/:id", async (req, res) => {
 
 router.post("/session/data", authenticateJWT, async (req, res) => {
   const educatorId = req.id;
-  console.log("secret", educatorId);
+  //console.log("secret", educatorId);
   const { title, description } = req.body;
   if (!title || !description) {
     return res.status(400).json({ error: "All fields are required" });

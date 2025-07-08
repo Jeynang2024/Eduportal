@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { getStudentData ,getstudentsAchievements,getStudentBehaviouralData} from "../../services/studentService";
+const COLORS =["#8B5CF6","#06B6D4","#10B981","#F59E0B","#EF4444"]
+const BEHAVIOR_COLORS = ["#8B5CF6", "#06B6D4", "#10B981", "#F59E0B", "#EF4444"];
+
 import {
   User,
   BookOpen,
@@ -34,22 +38,74 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { getStudentProfile } from "../../services/studentService";
+import { getStudentProfile ,getStudentPerformance} from "../../services/studentService";
 import { getUserFromToken } from "../../utils";
 import Cookies from "js-cookie";
 
 const StudentDashboard = () => {
   const [activeTab, setActiveTab] = useState("home");
-  const accessToken = Cookies.get("accessToken");
+  const accessToken =  localStorage.getItem("token");
+
   const user = getUserFromToken(accessToken);
   const userId = user?.id;
   const [profile, setProfile] = useState(null);
-
+  const [AcademicData,setAcademicData]=useState([]);
+  const [BehavioralData,setBehaviouralData]=useState([]);
+  const [OverallTrend,setOverallTrend]=useState([]);
+  const [studentPerformance,setStudentPerformance]=useState([]);
+  const [achievements,setachievementsdata]=useState([]);
+   
   useEffect(() => {
     if (userId) {
       getStudentProfile(userId).then(setProfile);
     }
+
+    getStudentData().then(data=>{
+      setAcademicData(data[0]);
+      //console.log("student data",data[0])
+    })
+
+    getStudentBehaviouralData().then(data=>{
+      setBehaviouralData(data[0]);
+      //console.log("student data",data[0])
+
+    })
+
+   getstudentsAchievements().then(data=>{
+   // console.log('Achievements state:', achievements);
+//console.log('Is array?', Array.isArray(achievements));
+      console.log("achievement data",data[0])
+      const achieve= data[0].criteria?.map(s => ({
+      title: s.title,
+      category:s.category,
+      
+}));
+
+    setachievementsdata(achieve);
+
+   })
+
+    getStudentPerformance().then(data=>{
+//console.log('🔄 Sessionwise data returned:', data, Array.isArray(data));
+      const sessiondata= data.sessions?.map(s => ({
+      name: s.sessionTitle,
+      subjectAvg:s.academicStats.subjectAverages,
+     academic: s.academicStats.averageScore,
+     behavioral: s.behaviorStats.averageScore,
+}));
+
+
+     const overallTrend=data.overallTrends
+      
+    
+setOverallTrend(overallTrend);
+setStudentPerformance(sessiondata);
+    })
+
+
+
   }, [userId]);
+  
 
   if (!profile) {
     return (
@@ -81,7 +137,7 @@ const StudentDashboard = () => {
     religion: profile.religion || "Hindu",
     mothertoungue: profile.mothertoungue || "Hindi",
     literacyscore: profile.literacyscore || 88,
-    behavioralScore: profile.behaviorScores || 85,
+    behavioralScore: profile.behavioralScore/10 || 85,
     extracurricularActivities: profile.extracurricularActivities || [
       "Football",
       "Music",
@@ -143,24 +199,44 @@ const StudentDashboard = () => {
     },
   ];
 
-  const currentMarks = [
+  /*const currentMarks = [
     { subject: "Mathematics", marks: 92, total: 100, color: "#8B5CF6" },
     { subject: "Science", marks: 96, total: 100, color: "#06B6D4" },
     { subject: "English", marks: 92, total: 100, color: "#10B981" },
     { subject: "History", marks: 88, total: 100, color: "#F59E0B" },
     { subject: "Geography", marks: 93, total: 100, color: "#EF4444" },
-  ];
+  ];*/
+  const currentMarks = AcademicData?.subjects?.map((sub,number) => ({
+  subject: sub.subjectName,
+  marks: sub.marks,
+  total: 100,
+  color: COLORS[number % COLORS.length]  // wrong
+})) || [];
 
-  const behaviorScores = [
+//BehavioralData
+const behaviorScores = BehavioralData?.criteria?.map((sub,number) => ({
+  criteria: sub.Name,
+  score: sub.score,
+   // wrong
+})) || [];
+const sortedBehavior = [...behaviorScores].sort((a, b) => b.score - a.score);
+const topBehaviors = sortedBehavior.slice(0, 3);
+
+const topBehaviorsWithColors = topBehaviors.map((item, idx) => ({
+  ...item,
+  color: BEHAVIOR_COLORS[idx % BEHAVIOR_COLORS.length],
+}));
+
+  /*const behaviorScores = [
     { criteria: "Discipline", score: 90 },
     { criteria: "Participation", score: 72 },
     { criteria: "Teamwork", score: 92 },
     { criteria: "Leadership", score: 64 },
     { criteria: "Creativity", score: 94 },
     { criteria: "Responsibility", score: 87 },
-  ];
+  ];*/
 
-  const upcomingSessions = [
+  /*const upcomingSessions = [
     {
       title: "Advanced Physics",
       date: "2025-07-01",
@@ -179,8 +255,8 @@ const StudentDashboard = () => {
       time: "9:00 AM",
       educator: "Mr. Singh",
     },
-  ];
-
+  ];*/
+/*
   const achievements = [
     { title: "Science Excellence", date: "May 2025", type: "Academic" },
     { title: "Best Team Player", date: "April 2025", type: "Behavioral" },
@@ -189,7 +265,7 @@ const StudentDashboard = () => {
       date: "March 2025",
       type: "Competition",
     },
-  ];
+  ];*/
 
   const PersonalCard = ({ icon: Icon, title, value, subtitle, gradient }) => (
     <div
@@ -302,14 +378,14 @@ const StudentDashboard = () => {
               <PersonalCard
                 icon={TrendingUp}
                 title="Literacy Score"
-                value={`${studentProfile.literacyscore}%`}
+                value={`${studentProfile.literacyscore.toFixed(2)}%`}
                 subtitle="Above average"
                 gradient="bg-gradient-to-br from-green-500 to-green-700"
               />
               <PersonalCard
                 icon={Heart}
                 title="Behavior Score"
-                value={`${studentProfile.behavioralScore}%`}
+                value={`${studentProfile.behavioralScore.toFixed(2)}%`}
                 subtitle="Excellent conduct"
                 gradient="bg-gradient-to-br from-purple-500 to-purple-700"
               />
@@ -337,7 +413,7 @@ const StudentDashboard = () => {
                 </div>
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={academicProgress}>
+                  <AreaChart data={studentPerformance}>
                     <defs>
                       <linearGradient
                         id="colorMath"
@@ -377,19 +453,19 @@ const StudentDashboard = () => {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" />
+                    <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
                     <Area
                       type="monotone"
-                      dataKey="math"
+                      dataKey="academic"
                       stroke="#8B5CF6"
                       fillOpacity={1}
                       fill="url(#colorMath)"
                     />
                     <Area
                       type="monotone"
-                      dataKey="science"
+                      dataKey="behavioral"
                       stroke="#06B6D4"
                       fillOpacity={1}
                       fill="url(#colorScience)"
@@ -408,7 +484,7 @@ const StudentDashboard = () => {
                     <div key={index} className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-700">
-                          {subject.subject}
+                          {subject.subjectName}
                         </span>
                         <span className="text-sm font-bold text-gray-900">
                           {subject.marks}/{subject.total}
@@ -433,7 +509,7 @@ const StudentDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
                 <ProgressRing
-                  percentage={studentProfile.literacyscore}
+                  percentage={studentProfile.literacyscore.toFixed(2)}
                   color="#8B5CF6"
                 />
                 <h4 className="text-lg font-semibold text-gray-900 mt-4">
@@ -444,7 +520,7 @@ const StudentDashboard = () => {
 
               <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 text-center">
                 <ProgressRing
-                  percentage={studentProfile.behavioralScore}
+                  percentage={studentProfile.behavioralScore.toFixed(2)}
                   color="#10B981"
                 />
                 <h4 className="text-lg font-semibold text-gray-900 mt-4">
@@ -483,13 +559,13 @@ const StudentDashboard = () => {
                     <div className="flex items-center mb-2">
                       <Award className="h-5 w-5 text-yellow-600 mr-2" />
                       <span className="text-xs font-medium text-yellow-800 bg-yellow-200 px-2 py-1 rounded">
-                        {achievement.type}
+                        {achievement.category}
                       </span>
                     </div>
                     <h4 className="font-semibold text-gray-900">
                       {achievement.title}
                     </h4>
-                    <p className="text-sm text-gray-600">{achievement.date}</p>
+                    <p className="text-sm text-gray-600">{achievement.category}</p>
                   </div>
                 ))}
               </div>
@@ -504,46 +580,33 @@ const StudentDashboard = () => {
                 Academic Performance Trends
               </h3>
               <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={academicProgress}>
+                <LineChart data={studentPerformance}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Line
                     type="monotone"
-                    dataKey="math"
+                    dataKey="subjectAvg.maths"
                     stroke="#8B5CF6"
                     strokeWidth={3}
                     name="Mathematics"
                   />
                   <Line
                     type="monotone"
-                    dataKey="science"
+                    dataKey="subjectAvg.physics"
                     stroke="#06B6D4"
                     strokeWidth={3}
-                    name="Science"
+                    name="Physics"
                   />
                   <Line
                     type="monotone"
-                    dataKey="english"
+                    dataKey="subjectAvg.chemistry"
                     stroke="#10B981"
                     strokeWidth={3}
-                    name="English"
+                    name="Chemistry"
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="history"
-                    stroke="#F59E0B"
-                    strokeWidth={3}
-                    name="History"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="geography"
-                    stroke="#EF4444"
-                    strokeWidth={3}
-                    name="Geography"
-                  />
+                 
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -571,22 +634,22 @@ const StudentDashboard = () => {
                 <div className="space-y-4">
                   <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                     <h4 className="font-semibold text-green-800">
-                      Strongest Subject
+                       Academic Trend
                     </h4>
-                    <p className="text-green-700">Science - 96% (Excellent)</p>
+                    <p className="text-green-700">{OverallTrend.academicTrend}</p>
                   </div>
                   <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
                     <h4 className="font-semibold text-blue-800">
-                      Most Improved
+                      Academic Progress
                     </h4>
-                    <p className="text-blue-700">Mathematics - +14 points</p>
+                    <p className="text-blue-700">{OverallTrend.academicProgress}</p>
                   </div>
                   <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                     <h4 className="font-semibold text-orange-800">
-                      Focus Area
+                      Behaviour Trend
                     </h4>
                     <p className="text-orange-700">
-                      History - Room for improvement
+                      {OverallTrend.behaviorTrend}
                     </p>
                   </div>
                 </div>
@@ -647,7 +710,22 @@ const StudentDashboard = () => {
                   Behavior Highlights
                 </h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+               {topBehaviorsWithColors.map((item, idx) => (
+  <div
+    key={idx}
+    className="flex items-center justify-between p-3 rounded-lg"
+    style={{ backgroundColor: item.color + "22" }}  // subtle bg tint
+  >
+    <span className="font-medium" style={{ color: item.color }}>
+      {item.criteria}
+    </span>
+    <span className="font-bold" style={{ color: item.color }}>
+      {item.score}%
+    </span>
+  </div>
+))}
+
+                  {/*<div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                     <span className="text-green-700">Creativity</span>
                     <span className="font-bold text-green-800">94%</span>
                   </div>
@@ -658,7 +736,7 @@ const StudentDashboard = () => {
                   <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <span className="text-purple-700">Discipline</span>
                     <span className="font-bold text-purple-800">90%</span>
-                  </div>
+                  </div>*/}
                 </div>
               </div>
             </div>
@@ -670,10 +748,10 @@ const StudentDashboard = () => {
             <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
                 <Calendar className="h-6 w-6 mr-2 text-blue-600" />
-                Upcoming Sessions
+                Sessions
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {upcomingSessions.map((session, index) => (
+                {studentPerformance.map((session, index) => (
                   <div
                     key={index}
                     className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 hover:shadow-md transition-all duration-300"
@@ -687,21 +765,29 @@ const StudentDashboard = () => {
                       </span>
                     </div>
                     <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                      {session.title}
+                      {session.name}
                     </h4>
                     <div className="space-y-2 text-sm text-gray-600">
+                       <div className="flex items-center">
+                        {/* <Calendar className="h-4 w-4 mr-2" />
+                        {new Date(session.date).toLocaleDateString()}*/}
+                        <p>Academic Score:&nbsp;{session.academic}</p>
+
+                      </div> 
                       <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        {new Date(session.date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
+                        {/* <Calendar className="h-4 w-4 mr-2" />
+                        {new Date(session.date).toLocaleDateString()}*/}
+                        <p>Behavioural Score:&nbsp;{session.behavioral}</p>
+
+                      </div> 
+                      {/* <div className="flex items-center">
                         <Clock className="h-4 w-4 mr-2" />
                         {session.time}
-                      </div>
-                      <div className="flex items-center">
+                      </div> */}
+                      {/* <div className="flex items-center">
                         <User className="h-4 w-4 mr-2" />
                         {session.educator}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 ))}

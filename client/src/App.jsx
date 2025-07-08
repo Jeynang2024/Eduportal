@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter,createHashRouter, Navigate, RouterProvider } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import RootLayout from "./layouts/RootLayout";
 import EducatorLayout from "./layouts/EducatorLayout";
@@ -63,7 +63,7 @@ const publicRoutes = {
 };
 
 // Root router configuration
-const router = createBrowserRouter([
+const router = createHashRouter([
   publicRoutes,
   authRoutes,
   educatorRoutes,
@@ -71,8 +71,11 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <NotFound />,
-  },
-]);
+  }
+],{
+  basename: "/Eduportal"
+}
+);
 
 const App = () => {
   return <RouterProvider router={router} />;

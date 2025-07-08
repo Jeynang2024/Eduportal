@@ -1,6 +1,18 @@
-import { useEffect } from "react";
-
+import  { useEffect } from "react";
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 const NavbarStudent = () => {
+  const [cookies, , removeCookie] = useCookies(['authToken']);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove the authentication cookie
+    localStorage.removeItem("token");
+
+    //removeCookie('accessToken', { path: '/' });
+    // Redirect to homepage
+window.location.href = '/';
+  };
 
     useEffect(() => {
         // Inject Google Translate script only once
@@ -53,6 +65,16 @@ const NavbarStudent = () => {
               Student Profile
             </a>
           </li>
+           <li>
+         <button
+  onClick={handleLogout}
+  className="w-full text-left px-4  text-gray-400 hover:bg-red-50 transition-colors"
+>
+  Logout
+</button>
+         
+            </li>
+          
         </ul>
       </div>
     </nav>
