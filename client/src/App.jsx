@@ -63,7 +63,7 @@ const publicRoutes = {
 };
 
 // Root router configuration
-const router = createHashRouter([
+const router = createBrowserRouter([
   publicRoutes,
   authRoutes,
   educatorRoutes,
