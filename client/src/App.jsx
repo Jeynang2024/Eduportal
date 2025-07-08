@@ -68,10 +68,11 @@ const router = createHashRouter([
   authRoutes,
   educatorRoutes,
   studentRoutes,
+  { path: "/", element: <LandingPage /> },
   {
     path: "*",
     element: <NotFound />,
-  }
+  },
 ],{
   basename: "/Eduportal"
 }
