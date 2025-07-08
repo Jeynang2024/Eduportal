@@ -49,30 +49,30 @@ window.location.href = '/';
         <div className="flex justify-end p-2 bg-blue-50">
           <div id="google_translate_element"></div>
         </div>
-        <a
-          href="/educator/dashboard"
+        <Link
+          to="/educator/dashboard"
           className="text-white hover:text-blue-200 transition-colors font-medium"
         >
           Dashboard
-        </a>
-        <a
-          href="/educator/leaderboard"
+        </Link>
+        <Link
+          to="/educator/leaderboard"
           className="text-white hover:text-blue-200 transition-colors font-medium"
         >
           Leaderboard
-        </a>
-        <a
-          href="/educator/add-data"
+        </Link>
+        <Link
+          to="/educator/add-data"
           className="text-white hover:text-blue-200 transition-colors font-medium"
         >
           Add Data
-        </a>
-        <a
-          href="/educator/add-students"
+        </Link>
+        <Link
+          to="/educator/add-students"
           className="text-white hover:text-blue-200 transition-colors font-medium"
         >
           Add Students
-        </a>
+        </Link>
       </div>
       <div className="relative">
         <button
