@@ -23,6 +23,10 @@ app.use(cookieParser());
 app.use('/api/user',userRoutes);
 app.use('/api/data',dataRoutes);
 
+app.get("/", (req, res) => {
+  res.status(201).json({ message: "req has been sent" });
+});
+
 mongoose.connect(process.env.DB_URL)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
